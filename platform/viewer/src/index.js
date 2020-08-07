@@ -24,11 +24,11 @@ import ReactDOM from 'react-dom';
  * the defaultExtensions property.
  */
 import OHIFVTKExtension from '@ohif/extension-vtk';
-import OHIFDicomHtmlExtension from '@ohif/extension-dicom-html';
-import OHIFDicomSegmentationExtension from '@ohif/extension-dicom-segmentation';
-import OHIFDicomRtExtension from '@ohif/extension-dicom-rt';
-import OHIFDicomMicroscopyExtension from '@ohif/extension-dicom-microscopy';
-import OHIFDicomPDFExtension from '@ohif/extension-dicom-pdf';
+// import OHIFDicomHtmlExtension from '@ohif/extension-dicom-html';
+// import OHIFDicomSegmentationExtension from '@ohif/extension-dicom-segmentation';
+// import OHIFDicomRtExtension from '@ohif/extension-dicom-rt';
+// import OHIFDicomMicroscopyExtension from '@ohif/extension-dicom-microscopy';
+// import OHIFDicomPDFExtension from '@ohif/extension-dicom-pdf';
 import OHIFDicomP10DownloaderExtension from '@ohif/extension-dicom-p10-downloader';
 
 /*
@@ -44,11 +44,11 @@ const appProps = {
   config,
   defaultExtensions: [
     OHIFVTKExtension,
-    OHIFDicomHtmlExtension,
-    OHIFDicomMicroscopyExtension,
-    OHIFDicomPDFExtension,
-    OHIFDicomSegmentationExtension,
-    OHIFDicomRtExtension,
+    //OHIFDicomHtmlExtension,
+    //OHIFDicomMicroscopyExtension,
+    //OHIFDicomPDFExtension,
+    //OHIFDicomSegmentationExtension,
+    //OHIFDicomRtExtension,
     OHIFDicomP10DownloaderExtension,
   ],
 };

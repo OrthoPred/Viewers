@@ -62,11 +62,11 @@ function Header(props) {
 
   return (
     <>
-      <div className="notification-bar">{t('INVESTIGATIONAL USE ONLY')}</div>
-      <div
+      {/* <div className="notification-bar">{t('INVESTIGATIONAL USE ONLY')}</div> */}
+      {/* <div
         className={classNames('entry-header', { 'header-big': useLargeLogo })}
-      >
-        <div className="header-left-box">
+      > */}
+      {/* <div className="header-left-box">
           {location && location.studyLink && (
             <Link
               to={location.studyLink}
@@ -89,13 +89,13 @@ function Header(props) {
               {t(linkText)}
             </Link>
           )}
-        </div>
+        </div> */}
 
-        <div className="header-menu">
+      {/* <div className="header-menu">
           <span className="research-use">{t('INVESTIGATIONAL USE ONLY')}</span>
           <Dropdown title={t('Options')} list={options} align="right" />
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </>
   );
 }

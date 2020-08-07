@@ -6,7 +6,7 @@ import { servicesManager } from './../../App';
 
 import './ErrorBoundaryDialog.css';
 
-const { UIModalService } = servicesManager.services;
+// const { UIModalService } = servicesManager.services;
 
 const ErrorBoundaryDialog = ({ context, children }) => {
   const handleOnError = (error, componentStack) => {
@@ -38,10 +38,11 @@ const ErrorBoundaryDialog = ({ context, children }) => {
       );
     };
 
-    UIModalService.show({
-      content: ErrorDialog,
-      title: `Something went wrong in ${context}`,
-    });
+    // UIModalService.show({
+    //   content: ErrorDialog,
+    //   title: `Something went wrong in ${context}`,
+    // });
+    console.log(context);
   };
 
   const fallbackComponent = () => (

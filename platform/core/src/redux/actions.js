@@ -25,6 +25,7 @@ import {
 /**
  * VIEWPORT
  */
+
 export const setViewportSpecificData = (
   viewportIndex,
   viewportSpecificData

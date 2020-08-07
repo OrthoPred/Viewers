@@ -2,9 +2,8 @@ import OHIF from '@ohif/core';
 import { SimpleDialog } from '@ohif/ui';
 import cornerstone from 'cornerstone-core';
 import csTools from 'cornerstone-tools';
-import merge from 'lodash.merge';
+// import merge from 'lodash.merge';
 import initCornerstoneTools from './initCornerstoneTools.js';
-import measurementServiceMappingsFactory from './utils/measurementServiceMappings/measurementServiceMappingsFactory';
 
 /**
  *
@@ -13,7 +12,7 @@ import measurementServiceMappingsFactory from './utils/measurementServiceMapping
  * @param {Object|Array} configuration.csToolsConfig
  */
 export default function init({ servicesManager, configuration }) {
-  const { UIDialogService, MeasurementService } = servicesManager.services;
+  const { UIDialogService } = servicesManager.services;
 
   const callInputDialog = (data, event, callback) => {
     if (UIDialogService) {
@@ -55,7 +54,7 @@ export default function init({ servicesManager, configuration }) {
   initCornerstoneTools(defaultCsToolsConfig);
 
   const toolsGroupedByType = {
-    touch: [csTools.PanMultiTouchTool, csTools.ZoomTouchPinchTool],
+    //touch: [csTools.PanMultiTouchTool, csTools.ZoomTouchPinchTool],
     annotations: [
       csTools.ArrowAnnotateTool,
       csTools.BidirectionalTool,
@@ -82,9 +81,6 @@ export default function init({ servicesManager, configuration }) {
   Object.keys(toolsGroupedByType).forEach(toolsGroup =>
     tools.push(...toolsGroupedByType[toolsGroup])
   );
-
-  /* Measurement Service */
-  _connectToolsToMeasurementService(MeasurementService);
 
   /* Add extension tools configuration here. */
   const internalToolsConfig = {
@@ -133,14 +129,15 @@ export default function init({ servicesManager, configuration }) {
   /* Add tools with its custom props through extension configuration. */
   tools.forEach(tool => {
     const toolName = tool.name.replace('Tool', '');
-    const externalToolsConfig = configuration.tools || {};
-    const externalToolProps = externalToolsConfig[toolName] || {};
+    // const externalToolsConfig = configuration.tools || {};
+    // const externalToolProps = externalToolsConfig[toolName] || {};
     const internalToolProps = internalToolsConfig[toolName] || {};
-    const props = merge(
-      internalToolProps,
-      parseToolProps(externalToolProps, tool)
-    );
-    csTools.addTool(tool, props);
+    // const props = merge(
+    //   internalToolProps,
+    //   parseToolProps(externalToolProps, tool)
+    // );
+    // csTools.addTool(tool, props);
+    csTools.addTool(tool, internalToolProps);
   });
 
   // TODO -> We need a better way to do this with maybe global tool state setting all tools passive.
@@ -153,7 +150,7 @@ export default function init({ servicesManager, configuration }) {
     }
   });
 
-  csTools.setToolActive('Pan', { mouseButtonMask: 4 });
+  csTools.setToolActive('Pan', { mouseButtonMask: 3 });
   csTools.setToolActive('Zoom', { mouseButtonMask: 2 });
   csTools.setToolActive('Wwwc', { mouseButtonMask: 1 });
   csTools.setToolActive('StackScrollMouseWheel', {}); // TODO: Empty options should not be required
@@ -161,116 +158,3 @@ export default function init({ servicesManager, configuration }) {
   csTools.setToolActive('ZoomTouchPinch', {});
   csTools.setToolEnabled('Overlay', {});
 }
-
-const _initMeasurementService = measurementService => {
-  /* Initialization */
-  const { toAnnotation, toMeasurement } = measurementServiceMappingsFactory(
-    measurementService
-  );
-  const csToolsVer4MeasurementSource = measurementService.createSource(
-    'CornerstoneTools',
-    '4'
-  );
-
-  /* Matching Criterias */
-  const matchingCriteria = {
-    valueType: measurementService.VALUE_TYPES.POLYLINE,
-    points: 2,
-  };
-
-  /* Mappings */
-  measurementService.addMapping(
-    csToolsVer4MeasurementSource,
-    'Length',
-    matchingCriteria,
-    toAnnotation,
-    toMeasurement
-  );
-
-  return csToolsVer4MeasurementSource;
-};
-
-const _connectToolsToMeasurementService = measurementService => {
-  const csToolsVer4MeasurementSource = _initMeasurementService(
-    measurementService
-  );
-  const {
-    id: sourceId,
-    addOrUpdate,
-    getAnnotation,
-  } = csToolsVer4MeasurementSource;
-
-  /* Measurement Service Events */
-  cornerstone.events.addEventListener(
-    cornerstone.EVENTS.ELEMENT_ENABLED,
-    event => {
-      const {
-        MEASUREMENT_ADDED,
-        MEASUREMENT_UPDATED,
-      } = measurementService.EVENTS;
-
-      measurementService.subscribe(
-        MEASUREMENT_ADDED,
-        ({ source, measurement }) => {
-          if (![sourceId].includes(source.id)) {
-            const annotation = getAnnotation('Length', measurement.id);
-
-            console.log(
-              'Measurement Service [Cornerstone]: Measurement added',
-              measurement
-            );
-            console.log('Mapped annotation:', annotation);
-          }
-        }
-      );
-
-      measurementService.subscribe(
-        MEASUREMENT_UPDATED,
-        ({ source, measurement }) => {
-          if (![sourceId].includes(source.id)) {
-            const annotation = getAnnotation('Length', measurement.id);
-
-            console.log(
-              'Measurement Service [Cornerstone]: Measurement updated',
-              measurement
-            );
-            console.log('Mapped annotation:', annotation);
-          }
-        }
-      );
-
-      const addOrUpdateMeasurement = csToolsAnnotation => {
-        try {
-          const { toolName, toolType, measurementData } = csToolsAnnotation;
-          const csTool = toolName || measurementData.toolType || toolType;
-          csToolsAnnotation.id = measurementData._measurementServiceId;
-          const measurementServiceId = addOrUpdate(csTool, csToolsAnnotation);
-
-          if (!measurementData._measurementServiceId) {
-            addMeasurementServiceId(measurementServiceId, csToolsAnnotation);
-          }
-        } catch (error) {
-          console.warn('Failed to add or update measurement:', error);
-        }
-      };
-
-      const addMeasurementServiceId = (id, csToolsAnnotation) => {
-        const { measurementData } = csToolsAnnotation;
-        Object.assign(measurementData, { _measurementServiceId: id });
-      };
-
-      [
-        csTools.EVENTS.MEASUREMENT_ADDED,
-        csTools.EVENTS.MEASUREMENT_MODIFIED,
-      ].forEach(csToolsEvtName => {
-        event.detail.element.addEventListener(
-          csToolsEvtName,
-          ({ detail: csToolsAnnotation }) => {
-            console.log(`Cornerstone Element Event: ${csToolsEvtName}`);
-            addOrUpdateMeasurement(csToolsAnnotation);
-          }
-        );
-      });
-    }
-  );
-};

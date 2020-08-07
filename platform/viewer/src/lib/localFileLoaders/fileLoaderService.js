@@ -14,6 +14,7 @@ class FileLoaderService extends FileLoader {
   }
 
   static groupSeries(studies) {
+    console.log('groupseries ', studies);
     const groupBy = (list, groupByKey, listKey) => {
       let nonKeyCounter = 1;
 
@@ -54,18 +55,22 @@ class FileLoaderService extends FileLoader {
   }
 
   addFile(file) {
+    console.log('fileloadservice.addFile ', file.name);
     return cornerstoneWADOImageLoader.wadouri.fileManager.add(file);
   }
 
   loadFile(file, imageId) {
+    console.log('fileloadservice.loadFile ', file.name);
     return this.loader.loadFile(file, imageId);
   }
 
   getDataset(image, imageId) {
+    console.log('fileloadservice.getDataset ', imageId);
     return this.loader.getDataset(image, imageId);
   }
 
   getStudies(dataset, imageId) {
+    console.log('fileloadservice.getStudies ', imageId);
     return this.loader.getStudies(dataset, imageId);
   }
 

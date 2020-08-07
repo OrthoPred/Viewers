@@ -1,11 +1,62 @@
 import './ViewerMain.css';
 
 import { Component } from 'react';
-import { ConnectedViewportGrid } from './../components/ViewportGrid/index.js';
+// import { ConnectedViewportGrid } from './../components/ViewportGrid/index.js';
+// import ConnectedViewportGrid from './../components/ViewportGrid/ConnectedViewportGrid.js';
 import PropTypes from 'prop-types';
 import React from 'react';
 import memoize from 'lodash/memoize';
+// In comes memoization, a way for our function to remember (cache) the results.
+// Memoization is an optimization technique used primarily to speed up computer programs
+// by storing the results of expensive function calls and returning the cached result when the same inputs occur again
+// Memoizing in simple terms means memorizing or storing in memory. A memoized function is
+// usually faster because if the function is called subsequently with the previous value(s),
+// then instead of executing the function, we would be fetching the result from the cache..
 import _values from 'lodash/values';
+
+import ViewportGrid from './../components/ViewportGrid/ViewportGrid.js';
+import { MODULE_TYPES } from '@ohif/core';
+import { connect } from 'react-redux';
+import { extensionManager } from './../App.js';
+// import memoize from 'lodash/memoize';
+
+const getAvailableViewportModules = memoize(viewportModules => {
+  const availableViewportModules = {};
+  viewportModules.forEach(moduleDefinition => {
+    availableViewportModules[moduleDefinition.extensionId] =
+      moduleDefinition.module;
+  });
+  return availableViewportModules;
+});
+
+const mapStateToProps = state => {
+  const viewportModules = extensionManager.modules[MODULE_TYPES.VIEWPORT];
+  const availableViewportModules = getAvailableViewportModules(viewportModules);
+
+  // TODO: Use something like state.plugins.defaultPlugin[MODULE_TYPES.VIEWPORT]
+  let defaultPlugin;
+  if (viewportModules.length) {
+    defaultPlugin = viewportModules[0].extensionId;
+  }
+
+  const { numRows, numColumns, layout, activeViewportIndex } = state.viewports;
+
+  return {
+    numRows,
+    numColumns,
+    layout,
+    activeViewportIndex,
+    // TODO: rename `availableViewportModules`
+    availablePlugins: availableViewportModules,
+    // TODO: rename `defaultViewportModule`
+    defaultPlugin,
+  };
+};
+
+const ConnectedViewportGrid = connect(
+  mapStateToProps,
+  null
+)(ViewportGrid);
 
 var values = memoize(_values);
 
@@ -61,22 +112,33 @@ class ViewerMain extends Component {
 
     // Get all the display sets for the viewer studies
     if (this.props.studies) {
+      console.log('componentDidMount and there is study');
       const displaySets = this.getDisplaySets(this.props.studies);
       this.setState({ displaySets }, this.fillEmptyViewportPanes);
+    } else {
+      console.log('componentDidMount, no study');
     }
+    console.log('props.studies= ', this.props.studies);
   }
 
   componentDidUpdate(prevProps) {
+    console.log('viewpots::::::', this.props.viewports);
     const prevViewportAmount = prevProps.layout.viewports.length;
     const viewportAmount = this.props.layout.viewports.length;
     const isVtk = this.props.layout.viewports.some(vp => !!vp.vtk);
+
+    console.log('props.studies= ', this.props.studies);
+    console.log('prevProps.studies= ', prevProps.studies);
 
     if (
       this.props.studies !== prevProps.studies ||
       (viewportAmount !== prevViewportAmount && !isVtk)
     ) {
+      console.log('componentDidUpdate study not equal');
       const displaySets = this.getDisplaySets(this.props.studies);
       this.setState({ displaySets }, this.fillEmptyViewportPanes);
+    } else {
+      console.log('componentDidUpdate study equal');
     }
   }
 
@@ -140,11 +202,14 @@ class ViewerMain extends Component {
     );
 
     this.props.setViewportSpecificData(viewportIndex, displaySet);
+    console.log('viewer main setVPspecificdata:', viewportIndex, displaySet);
   };
 
   render() {
+    console.log('viewermain render');
     const { viewportSpecificData } = this.props;
     const viewportData = values(viewportSpecificData);
+    console.log('viewermain render after viewport');
 
     return (
       <div className="ViewerMain">
