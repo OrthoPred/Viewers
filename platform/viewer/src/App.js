@@ -120,7 +120,7 @@ class App extends Component {
     const { config, defaultExtensions } = props;
 
     const appDefaultConfig = {
-      showStudyList: true,
+      showStudyList: false,
       cornerstoneExtensionConfig: {},
       extensions: [],
       routerBasename: '/',

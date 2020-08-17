@@ -27,6 +27,7 @@ const DEFAULT_FILENAME = 'image';
 const REFRESH_VIEWPORT_TIMEOUT = 1000;
 
 const ViewportDownloadForm = ({
+  studies,
   activeViewport,
   onClose,
   updateViewportPreview,
@@ -86,12 +87,16 @@ const ViewportDownloadForm = ({
 
   const refreshViewport = useRef(null);
 
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!44
+
   const downloadImage = () => {
+    console.log('studies from vp dl form:', studies);
     downloadBlob(
       filename || DEFAULT_FILENAME,
       fileType,
       viewportElement,
-      downloadCanvas.ref.current
+      downloadCanvas.ref.current,
+      studies
     );
   };
 
@@ -413,6 +418,7 @@ const ViewportDownloadForm = ({
 };
 
 ViewportDownloadForm.propTypes = {
+  studies: PropTypes.array.isRequired, //***** */
   onClose: PropTypes.func.isRequired,
   activeViewport: PropTypes.object,
   updateViewportPreview: PropTypes.func.isRequired,

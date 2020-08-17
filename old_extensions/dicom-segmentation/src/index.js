@@ -23,6 +23,7 @@ export default {
   getToolbarModule({ servicesManager }) {
     return toolbarModule;
   },
+
   getPanelModule({ commandsManager, api, servicesManager }) {
     const { UINotificationService } = servicesManager.services;
 

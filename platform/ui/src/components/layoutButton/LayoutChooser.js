@@ -21,8 +21,8 @@ class LayoutChooser extends PureComponent {
   };
 
   static defaultProps = {
-    Rows: 3,
-    Columns: 3,
+    Rows: 2, //3,
+    Columns: 2, //3,
     visible: true,
     boxSize: 20,
     cellBorder: 1,

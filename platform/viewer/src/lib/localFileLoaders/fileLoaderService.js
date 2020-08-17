@@ -60,7 +60,7 @@ class FileLoaderService extends FileLoader {
   }
 
   loadFile(file, imageId) {
-    console.log('fileloadservice.loadFile ', file.name);
+    console.log('fileloadservice.loadFile ', file.name, imageId);
     return this.loader.loadFile(file, imageId);
   }
 

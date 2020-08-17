@@ -20,6 +20,12 @@ const refreshCornerstoneViewports = () => {
 
 const commandsModule = ({ servicesManager }) => {
   const actions = {
+    customCommand: ({ viewports }) => {
+      const enabledElement = getEnabledElement(viewports.activeViewportIndex);
+      let viewport = cornerstone.getViewport(enabledElement);
+      console.log('customcommand, ', viewport);
+    },
+
     rotateViewport: ({ viewports, rotation }) => {
       const enabledElement = getEnabledElement(viewports.activeViewportIndex);
 
@@ -153,9 +159,11 @@ const commandsModule = ({ servicesManager }) => {
       const enabledElement = getEnabledElement(viewports.activeViewportIndex);
       return enabledElement;
     },
-    showDownloadViewportModal: ({ title, viewports }) => {
+    showDownloadViewportModal: ({ title, viewports, studies }) => {
+      //download image
       const activeViewportIndex = viewports.activeViewportIndex;
       const { UIModalService } = servicesManager.services;
+      console.log('studies from showmodal:', studies);
       if (UIModalService) {
         UIModalService.show({
           content: CornerstoneViewportDownloadForm,
@@ -163,6 +171,7 @@ const commandsModule = ({ servicesManager }) => {
           contentProps: {
             activeViewportIndex,
             onClose: UIModalService.hide,
+            studies: studies,
           },
         });
       }
@@ -290,6 +299,11 @@ const commandsModule = ({ servicesManager }) => {
   };
 
   const definitions = {
+    customCommand: {
+      commandFn: actions.customCommand,
+      storeContexts: ['viewports'],
+      options: {},
+    },
     jumpToImage: {
       commandFn: actions.jumpToImage,
       storeContexts: [],
@@ -315,6 +329,7 @@ const commandsModule = ({ servicesManager }) => {
       storeContexts: ['viewports'],
       options: {},
     },
+
     getActiveViewportEnabledElement: {
       commandFn: actions.getActiveViewportEnabledElement,
       storeContexts: ['viewports'],

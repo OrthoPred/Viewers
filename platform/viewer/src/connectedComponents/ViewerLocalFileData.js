@@ -1,3 +1,5 @@
+// import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+
 import '../OHIFStandaloneViewer.css';
 import '../variables.css';
 import '../theme-tide.css';
@@ -85,24 +87,24 @@ class ViewerLocalFileData extends Component {
       const sopClassHandlerModules =
         extensionManager.modules['sopClassHandlerModule'];
 
-      console.log('study displaySets: ', study.displaySets);
       study.displaySets =
         study.displaySets ||
         studyMetadata.createDisplaySets(sopClassHandlerModules);
       studyMetadata.setDisplaySets(study.displaySets);
-      console.log('study displaySets after: ', study.displaySets);
 
+      // displayset = széria
       studyMetadata.forEachDisplaySet(displayset => {
-        console.log(displayset);
+        console.log('foreach display set', displayset);
         displayset.localFile = true;
       });
 
       studyMetadataManager.add(studyMetadata);
 
-      console.log(study);
+      console.log('study in updatestudies: ', study);
       return study;
     });
 
+    console.log('most tölti be a store ba a studykat');
     this.setState({
       studies: updatedStudies,
     });
@@ -110,15 +112,22 @@ class ViewerLocalFileData extends Component {
 
   render() {
     const onDrop = async acceptedFiles => {
+      console.log('setstate loading');
       this.setState({ loading: true });
       console.log('accepted files', acceptedFiles);
+
+      cornerstoneWADOImageLoader.wadouri.fileManager.purge();
       const studies = await filesToStudies(acceptedFiles);
+      console.log('flattened studies: ', studies);
       const updatedStudies = this.updateStudies(studies);
 
+      console.log('before if updated');
       if (!updatedStudies) {
+        console.log('inside if updated');
         return;
       }
 
+      //redundáns, updatestudies-ban csinálja
       this.setState({ studies: updatedStudies, loading: false });
     };
 

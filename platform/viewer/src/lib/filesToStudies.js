@@ -7,12 +7,16 @@ const processFile = async file => {
   try {
     console.log('file:', file);
 
-    dumpFile(file);
+    //dumpFile(file);
     const fileLoaderService = new FileLoaderService(file);
     const imageId = fileLoaderService.addFile(file);
     const image = await fileLoaderService.loadFile(file, imageId);
+    console.log('imageId, image:', imageId, image);
+    console.log('dataset studies in processfile lesz');
     const dataset = await fileLoaderService.getDataset(image, imageId);
+    console.log('studies in processfile lesz');
     const studies = await fileLoaderService.getStudies(dataset, imageId);
+    console.log('studies in processfile: ', studies);
 
     return studies;
   } catch (error) {
@@ -27,6 +31,8 @@ const processFile = async file => {
 export default async function filesToStudies(files) {
   const processFilesPromises = files.map(processFile);
   const studies = await Promise.all(processFilesPromises);
+
+  console.log('studies: ', studies);
 
   return FileLoaderService.groupSeries(studies.flat());
 }

@@ -13,13 +13,13 @@ const {
 
 // TODO: Transition to enums for the action names so that we can ensure they stay up to date
 // everywhere they're used.
-const MEASUREMENT_ACTION_MAP = {
-  added: onAdded,
-  removed: onRemoved,
-  modified: throttle(event => {
-    return onModified(event);
-  }, 300),
-};
+// const MEASUREMENT_ACTION_MAP = {
+//   added: onAdded,
+//   removed: onRemoved,
+//   modified: throttle(event => {
+//     return onModified(event);
+//   }, 300),
+// };
 
 const mapStateToProps = (state, ownProps) => {
   console.log('connectedcornerstoneviewport mapstatetoprops');
@@ -92,9 +92,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       );
     },
 
-    onMeasurementsChanged: (event, action) => {
-      return MEASUREMENT_ACTION_MAP[action](event);
-    },
+    // onMeasurementsChanged: (event, action) => {
+    //   return MEASUREMENT_ACTION_MAP[action](event);
+    // },
   };
 };
 

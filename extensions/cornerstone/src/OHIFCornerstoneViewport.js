@@ -221,6 +221,7 @@ class OHIFCornerstoneViewport extends Component {
       const { displaySet } = this.props.viewportData;
       const { StudyInstanceUID } = displaySet;
 
+      console.log('new image handler');
       if (currentImageIdIndex > 0) {
         this.props.onNewImage({
           StudyInstanceUID,

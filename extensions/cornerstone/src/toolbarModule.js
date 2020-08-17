@@ -80,24 +80,24 @@ const definitions = [
     commandName: 'setToolActive',
     commandOptions: { toolName: 'Length' },
   },
-  {
-    id: 'ArrowAnnotate',
-    label: 'Annotate',
-    icon: 'measure-non-target',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'ArrowAnnotate' },
-  },
-  {
-    id: 'Angle',
-    label: 'Angle',
-    icon: 'angle-left',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'Angle' },
-  },
+  // {
+  //   id: 'ArrowAnnotate',
+  //   label: 'Annotate',
+  //   icon: 'measure-non-target',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'ArrowAnnotate' },
+  // },
+  // {
+  //   id: 'Angle',
+  //   label: 'Angle',
+  //   icon: 'angle-left',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'Angle' },
+  // },
   {
     id: 'Reset',
     label: 'Reset',
@@ -106,16 +106,26 @@ const definitions = [
     type: TOOLBAR_BUTTON_TYPES.COMMAND,
     commandName: 'resetViewport',
   },
+  // {
+  //   id: 'Cine',
+  //   label: 'CINE',
+  //   icon: 'youtube',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.BUILT_IN,
+  //   options: {
+  //     behavior: TOOLBAR_BUTTON_BEHAVIORS.CINE,
+  //   },
+  // },
+
   {
-    id: 'Cine',
-    label: 'CINE',
-    icon: 'youtube',
+    id: 'Upload',
+    label: 'Upload',
+    icon: 'upload',
     //
-    type: TOOLBAR_BUTTON_TYPES.BUILT_IN,
-    options: {
-      behavior: TOOLBAR_BUTTON_BEHAVIORS.CINE,
-    },
+    type: TOOLBAR_BUTTON_TYPES.COMMAND,
+    commandName: 'downloadAndUploadStudy', //'customCommand',
   },
+
   {
     id: 'More',
     label: 'More',

@@ -1,6 +1,7 @@
 import React from 'react';
 import adjust from './icons/adjust.svg';
 // Icons
+import upload from './icons/upload.svg';
 import angleDoubleDown from './icons/angle-double-down.svg';
 import angleDoubleUp from './icons/angle-double-up.svg';
 import angleLeft from './icons/angle-left.svg';
@@ -89,6 +90,7 @@ import eye from './icons/eye.svg';
 import eyeClosed from './icons/eye-closed.svg';
 
 const ICONS = {
+  upload,
   eye,
   'eye-closed': eyeClosed,
   brush,

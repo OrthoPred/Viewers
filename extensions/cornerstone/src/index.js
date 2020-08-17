@@ -34,6 +34,7 @@ export default {
   preRegistration({ servicesManager, configuration = {} }) {
     init({ servicesManager, configuration });
   },
+
   getViewportModule({ commandsManager }) {
     const ExtendedOHIFCornerstoneViewport = props => {
       const onNewImageHandler = jumpData => {

@@ -375,8 +375,10 @@ function _handleBuiltIn(button) {
   }
 
   if (options.behavior === 'DOWNLOAD_SCREEN_SHOT') {
+    console.log('download gomb studies:', this.props.studies); //******************************************** */
     commandsManager.runCommand('showDownloadViewportModal', {
       title: t('Download High Quality Image'),
+      studies: this.props.studies,
     });
   }
 }
