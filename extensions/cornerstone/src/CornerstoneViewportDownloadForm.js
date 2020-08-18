@@ -1,5 +1,8 @@
 // import REQUIRED_TAGS from './required_tags';
 
+// import DownZip from 'downzip';
+import JSZip from 'jszip';
+
 import React from 'react';
 import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
@@ -156,90 +159,49 @@ const CornerstoneViewportDownloadForm = ({
     downloadCanvas,
     studies
   ) => {
-    const file = `${filename}.${fileType}`;
-    const mimetype = `image/${fileType}`;
-    var meta_tags = {};
-    console.log(REQUIRED_TAGS);
+    zipAll(studies).then(function(output) {
+      //accept
+      const url = window.URL.createObjectURL(output);
+      console.log(url);
+      var link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = 'jsons.zip';
 
-    studies.forEach(study => {
-      console.log('//////////////');
-      console.log('StudyInstanceUID:', study.StudyInstanceUID);
-      study.series.forEach(serie => {
-        console.log('****************');
-        console.log('\tSeriesInstanceUID:', serie.SeriesInstanceUID);
-        serie.instances.forEach(instance => {
-          console.log(' ');
-          console.log('\t\t+++++++++++++++++');
-          console.log('\t\tinstance:', instance.url);
-          console.log(' ');
-          REQUIRED_TAGS.forEach(tag => {
-            meta_tags[tag] = instance.metadata[tag];
-            console.log(
-              '\t\t\ttag: ',
-              tag,
-              ' ',
-              studies[0].series[0].instances[0].metadata[tag]
-            );
+      link.click();
+    });
+  };
+
+  var zipAll = function(studies) {
+    return new Promise(function(resolve, reject) {
+      var meta_tags = {};
+
+      const zip = new JSZip();
+      studies.forEach(study => {
+        console.log('StudyInstanceUID:', study.StudyInstanceUID);
+        study.series.forEach(serie => {
+          console.log('\tSeriesInstanceUID:', serie.SeriesInstanceUID);
+          serie.instances.forEach(instance => {
+            REQUIRED_TAGS.forEach(tag => {
+              meta_tags[tag] = instance.metadata[tag];
+            });
+            //Convert JSON Array to string.
+            var json = JSON.stringify(meta_tags);
+            //Convert JSON string to BLOB.
+            json = [json];
+            var tags_blob = new Blob(json, {
+              type: 'text/plain;charset=utf-8',
+            });
+
+            const path = `${instance.url}.json`;
+            zip.file(path, tags_blob);
           });
-          // console.log('meta tags: ', meta_tags);
         });
       });
+
+      const blob = zip.generateAsync({ type: 'blob' });
+      resolve(blob);
     });
-
-    // REQUIRED_TAGS.forEach(tag => {
-    //   meta_tags[tag] = studies[0].series[0].instances[0].metadata[tag];
-    //   console.log(
-    //     'tag: ',
-    //     tag,
-    //     ' ',
-    //     studies[0].series[0].instances[0].metadata[tag]
-    //   );
-    // });
-    // console.log('meta tags: ', meta_tags);
-
-    // //Convert JSON Array to string.
-    // var json = JSON.stringify(meta_tags);
-    // //Convert JSON string to BLOB.
-    // json = [json];
-    // var tags_blob = new Blob(json, { type: 'text/plain;charset=utf-8' });
-    // var link = document.createElement('a');
-    // link.href = window.URL.createObjectURL(tags_blob);
-    // link.download = 'tags.json';
-    // link.click();
-
-    console.log('ebből lesz a blob: ', studies[0].series[0].instances[0].url);
-    console.log(studies[0].series[0].instances[0].metadata.PixelData);
-    //var blob = new Blob([image.getPixelData()], {
-    // var blob = new Blob(
-    //   [studies[0].series[0].instances[0].metadata.PixelData],
-    //   {
-    //     type: 'application/dicom',
-    //   }
-    // );
-    // var link = document.createElement('a');
-    // link.href = window.URL.createObjectURL(blob);
-    // link.download = 'proba.dci';
-    // link.click();
-
-    // /* Handles JPEG images for IE11 */
-    // if (downloadCanvas.msToBlob && fileType === 'jpeg') {
-    //   const image = downloadCanvas.toDataURL(mimetype, 1);
-    //   const blob = utils.b64toBlob(
-    //     image.replace('data:image/jpeg;base64,', ''),
-    //     mimetype
-    //   );
-    //   return window.navigator.msSaveBlob(blob, file);
-    // }
-
-    // viewportElement.querySelector('canvas').toBlob(blob => {
-    //   const URLObj = window.URL || window.webkitURL;
-    //   const a = document.createElement('a');
-    //   a.href = URLObj.createObjectURL(blob);
-    //   a.download = file;
-    //   document.body.appendChild(a);
-    //   a.click();
-    //   document.body.removeChild(a);
-    // });
   };
 
   return (

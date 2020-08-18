@@ -78,7 +78,7 @@ const {
 async function downloadAndZip(dicomWebClient, listOfUIDs, options) {
   if (dicomWebClient instanceof api.DICOMwebClient) {
     const settings = buildSettings(listOfUIDs, options);
-    const { compression } = settings.tasks;
+    const { compression } = settings.tasks; // = const compression = settings.tasks.compression, https://stackoverflow.com/questions/41058569/what-is-the-difference-between-const-and-const-in-javascript
     const buffers = await downloadBuffers(settings, dicomWebClient);
     compression.deferred.resolve(zipAll(buffers, settings));
     const url = await compression.deferred.promise;
