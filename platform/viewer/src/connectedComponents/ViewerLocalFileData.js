@@ -21,44 +21,6 @@ const { OHIFStudyMetadata } = metadata;
 const { studyMetadataManager } = utils;
 const Viewer_ = connect()(Viewer);
 
-// const dropZoneLinkDialog = (onDrop, i18n, dir) => {
-//   return (
-//     <Dropzone onDrop={onDrop} noDrag>
-//       {({ getRootProps, getInputProps }) => (
-//         <span {...getRootProps()} className="link-dialog">
-//           {dir ? (
-//             <span>
-//               {i18n('Load folders')}
-//               <input
-//                 {...getInputProps()}
-//                 webkitdirectory="true"
-//                 mozdirectory="true"
-//               />
-//             </span>
-//           ) : (
-//             <span>
-//               {i18n('Load files')}
-//               <input {...getInputProps()} />
-//             </span>
-//           )}
-//         </span>
-//       )}
-//     </Dropzone>
-//   );
-// };
-
-// const linksDialogMessage = (onDrop, i18n) => {
-//   return (
-//     <>
-//       {i18n('Or click to ')}
-//       {dropZoneLinkDialog(onDrop, i18n)}
-//       {i18n(' or ')}
-//       {dropZoneLinkDialog(onDrop, i18n, true)}
-//       {i18n(' from dialog')}
-//     </>
-//   );
-// };
-
 class ViewerLocalFileData extends Component {
   static propTypes = {
     studies: PropTypes.array,
@@ -110,7 +72,6 @@ class ViewerLocalFileData extends Component {
 
       cornerstoneWADOImageLoader.wadouri.fileManager.purge();
       const studies = await filesToStudies(acceptedFiles);
-      console.log('flattened studies: ', studies);
       const updatedStudies = this.updateStudies(studies);
 
       if (!updatedStudies) {

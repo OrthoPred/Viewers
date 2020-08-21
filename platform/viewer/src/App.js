@@ -132,11 +132,11 @@ class App extends Component {
     };
 
     const {
-      servers,
+      // servers,
       hotkeys: appConfigHotkeys,
       cornerstoneExtensionConfig,
       extensions,
-      oidc,
+      // oidc,
     } = this._appConfig;
 
     setConfiguration(this._appConfig);
@@ -172,7 +172,6 @@ class App extends Component {
       //MeasurementService,
     } = servicesManager.services;
 
-    console.log('not user manager');
     return (
       <ErrorBoundary context="App">
         <Provider store={store}>
