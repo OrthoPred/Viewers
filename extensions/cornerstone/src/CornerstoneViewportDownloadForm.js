@@ -122,14 +122,6 @@ const CornerstoneViewportDownloadForm = ({
         cornerstone.loadImage(enabledElement.image.imageId).then(image => {
           console.log('image:', image.windowCenter, image.windowWidth);
 
-          // var blob = new Blob([image.getPixelData()], {
-          //   type: 'application/dicom',
-          // });
-          // var link = document.createElement('a');
-          // link.href = window.URL.createObjectURL(blob);
-          // link.download = 'proba.dci';
-          // link.click();
-
           cornerstone.displayImage(viewportElement, image);
           cornerstone.setViewport(viewportElement, viewport);
           cornerstone.resize(viewportElement, true);
@@ -169,6 +161,8 @@ const CornerstoneViewportDownloadForm = ({
       link.download = 'jsons.zip';
 
       link.click();
+      onClose();
+      // onClose: UIModalService.hide,
     });
   };
 
@@ -185,6 +179,18 @@ const CornerstoneViewportDownloadForm = ({
             REQUIRED_TAGS.forEach(tag => {
               meta_tags[tag] = instance.metadata[tag];
             });
+
+            var img_blob = new Blob([instance.metadata.PixelData], {
+              type: 'application/dicom',
+            });
+            const img_path = `${study.StudyInstanceUID}/${serie.SeriesInstanceUID}/${instance.url}.dci`;
+            zip.file(img_path.replace(':', '_'), img_blob);
+
+            // var link = document.createElement('a');
+            // link.href = window.URL.createObjectURL(blob);
+            // link.download = 'proba.dci';
+            // link.click();
+
             //Convert JSON Array to string.
             var json = JSON.stringify(meta_tags);
             //Convert JSON string to BLOB.
@@ -193,8 +199,8 @@ const CornerstoneViewportDownloadForm = ({
               type: 'text/plain;charset=utf-8',
             });
 
-            const path = `${instance.url}.json`;
-            zip.file(path, tags_blob);
+            const path = `${study.StudyInstanceUID}/${serie.SeriesInstanceUID}/${instance.url}.json`;
+            zip.file(path.replace(':', '_'), tags_blob);
           });
         });
       });

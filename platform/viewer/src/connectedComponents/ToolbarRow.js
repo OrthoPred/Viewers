@@ -14,7 +14,7 @@ import {
 import './ToolbarRow.css';
 import { commandsManager, extensionManager } from './../App.js';
 
-import ConnectedCineDialog from './ConnectedCineDialog';
+// import ConnectedCineDialog from './ConnectedCineDialog';
 import ConnectedLayoutButton from './ConnectedLayoutButton';
 import { withAppContext } from '../context/AppContext';
 
@@ -180,15 +180,17 @@ class ToolbarRow extends Component {
       <>
         <div className="ToolbarRow">
           <div className="pull-left m-t-1 p-y-1" style={{ padding: '10px' }}>
+            {' '}
+            {/* 'Series' button */}
             <RoundedButtonGroup
               options={this.buttonGroups.left}
               value={this.props.selectedLeftSidePanel || ''}
               onValueChanged={onPressLeft}
             />
           </div>
-          {buttonComponents}
-          <ConnectedLayoutButton />
-          <div
+          {buttonComponents} {/* tool buttons */}
+          <ConnectedLayoutButton /> {/* layout chooser button*/}
+          {/* <div
             className="pull-right m-t-1 rm-x-1"
             style={{ marginLeft: 'auto' }}
           >
@@ -199,7 +201,7 @@ class ToolbarRow extends Component {
                 onValueChanged={onPressRight}
               />
             )}
-          </div>
+          </div> */}
         </div>
       </>
     );
@@ -346,38 +348,38 @@ function _handleBuiltIn(button) {
   const { dialogId } = this.state;
   const { id, options } = button;
 
-  if (options.behavior === 'CINE') {
-    if (dialogId) {
-      dialog.dismiss({ id: dialogId });
-      this.setState(state => ({
-        dialogId: null,
-        activeButtons: [
-          ...state.activeButtons.filter(button => button.id !== id),
-        ],
-      }));
-    } else {
-      const spacing = 20;
-      const { x, y } = document
-        .querySelector(`.ViewerMain`)
-        .getBoundingClientRect();
-      const newDialogId = dialog.create({
-        content: ConnectedCineDialog,
-        defaultPosition: {
-          x: x + spacing || 0,
-          y: y + spacing || 0,
-        },
-      });
-      this.setState(state => ({
-        dialogId: newDialogId,
-        activeButtons: [...state.activeButtons, button],
-      }));
-    }
-  }
+  // if (options.behavior === 'CINE') {
+  //   if (dialogId) {
+  //     dialog.dismiss({ id: dialogId });
+  //     this.setState(state => ({
+  //       dialogId: null,
+  //       activeButtons: [
+  //         ...state.activeButtons.filter(button => button.id !== id),
+  //       ],
+  //     }));
+  //   } else {
+  //     const spacing = 20;
+  //     const { x, y } = document
+  //       .querySelector(`.ViewerMain`)
+  //       .getBoundingClientRect();
+  //     const newDialogId = dialog.create({
+  //       content: ConnectedCineDialog,
+  //       defaultPosition: {
+  //         x: x + spacing || 0,
+  //         y: y + spacing || 0,
+  //       },
+  //     });
+  //     this.setState(state => ({
+  //       dialogId: newDialogId,
+  //       activeButtons: [...state.activeButtons, button],
+  //     }));
+  //   }
+  // }
 
   if (options.behavior === 'DOWNLOAD_SCREEN_SHOT') {
     console.log('download gomb studies:', this.props.studies); //******************************************** */
     commandsManager.runCommand('showDownloadViewportModal', {
-      title: t('Download High Quality Image'),
+      title: t('Upload deidentified images to the server'), //Download High Quality Image'),
       studies: this.props.studies,
     });
   }

@@ -14,14 +14,6 @@ const {
 const mapStateToProps = state => {
   const { activeViewportIndex, layout, viewportSpecificData } = state.viewports;
 
-  console.log(
-    'mapstateprops',
-    activeViewportIndex,
-    layout,
-    viewportSpecificData,
-    state.viewports
-  );
-
   return {
     activeViewportIndex,
     layout,
@@ -46,7 +38,7 @@ const ViewerMain_ = connect(
   mapDispatchToProps
 )(ViewerMain);
 
-import { withDialog } from '@ohif/ui';
+// import { withDialog } from '@ohif/ui';
 import ToolbarRow from './ToolbarRow.js'; // toolbar, enélkül is működik
 import ConnectedStudyBrowser from './ConnectedStudyBrowser.js'; //kell, ez a sidepanel!!
 // import ConnectedViewerMain from './ConnectedViewerMain.js';
@@ -173,6 +165,16 @@ class Viewer extends Component {
 
         {/* VIEWPORTS + SIDEPANELS */}
         <div className="FlexboxLayout">
+          {/* L- LEFT */}
+          {/* <ErrorBoundaryDialog context="LLeftSidePanel">
+            <SidePanel from="left" isOpen={true}>
+              <ConnectedStudyBrowser
+                studies={this.state.thumbnails}
+                studyMetadata={this.props.studies}
+              />
+            </SidePanel>
+          </ErrorBoundaryDialog> */}
+
           {/* LEFT */}
           <ErrorBoundaryDialog context="LeftSidePanel">
             <SidePanel from="left" isOpen={this.state.isLeftSidePanelOpen}>
@@ -198,7 +200,7 @@ class Viewer extends Component {
   }
 }
 
-export default withDialog(Viewer);
+export default Viewer; //withDialog(Viewer);
 
 /**
  * What types are these? Why do we have "mapping" dropped in here instead of in

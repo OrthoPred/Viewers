@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { OidcProvider } from 'redux-oidc';
 import { I18nextProvider } from 'react-i18next';
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'; //Runtime type checking for React props and similar objects.
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
@@ -24,11 +24,11 @@ import {
   ExtensionManager,
   ServicesManager,
   HotkeysManager,
-  UINotificationService,
+  // UINotificationService,
   UIModalService,
   // UIDialogService,
   // MeasurementService,
-  utils,
+  //utils,
   // redux as reduxOHIF,
 } from '@ohif/core';
 
@@ -40,7 +40,7 @@ import { setConfiguration } from './config';
 
 /** Utils */
 import {
-  getUserManagerForOpenIdConnectClient,
+  //getUserManagerForOpenIdConnectClient,
   initWebWorkers,
 } from './utils/index.js';
 
@@ -93,9 +93,9 @@ class App extends Component {
       PropTypes.shape({
         routerBasename: PropTypes.string.isRequired,
         oidc: PropTypes.array,
-        whiteLabeling: PropTypes.shape({
-          createLogoComponentFn: PropTypes.func,
-        }),
+        // whiteLabeling: PropTypes.shape({
+        //   createLogoComponentFn: PropTypes.func,
+        // }),
         extensions: PropTypes.array,
       }),
     ]).isRequired,
@@ -112,7 +112,7 @@ class App extends Component {
   };
 
   _appConfig;
-  _userManager;
+  //_userManager;
 
   constructor(props) {
     super(props);
@@ -141,9 +141,9 @@ class App extends Component {
 
     setConfiguration(this._appConfig);
 
-    this.initUserManager(oidc);
+    // this.initUserManager(oidc);
     _initServices([
-      UINotificationService,
+      // UINotificationService,
       UIModalService,
       //UIDialogService,
       //MeasurementService,
@@ -159,7 +159,7 @@ class App extends Component {
      * if there is no hotkeys from localStorage set up from config.
      */
     _initHotkeys(appConfigHotkeys);
-    _initServers(servers);
+    // _initServers(servers);
     initWebWorkers();
   }
 
@@ -178,9 +178,13 @@ class App extends Component {
         <Provider store={store}>
           <AppProvider config={this._appConfig}>
             <I18nextProvider i18n={i18n}>
+              {' '}
+              {/*I18next is an internationalization-framework */}
               <Router basename={routerBasename}>
                 <DialogProvider service={UIDialogService}>
                   <ModalProvider modal={OHIFModal} service={UIModalService}>
+                    {' '}
+                    {/* toolbarhoz kell !!! */}
                     <DndProvider backend={HTML5Backend}>
                       <ViewerLocalFileData />
                     </DndProvider>
@@ -194,38 +198,38 @@ class App extends Component {
     );
   }
 
-  initUserManager(oidc) {
-    if (oidc && !!oidc.length) {
-      const firstOpenIdClient = this._appConfig.oidc[0];
+  // initUserManager(oidc) {
+  //   if (oidc && !!oidc.length) {
+  //     const firstOpenIdClient = this._appConfig.oidc[0];
 
-      const { protocol, host } = window.location;
-      const { routerBasename } = this._appConfig;
-      const baseUri = `${protocol}//${host}${routerBasename}`;
+  //     const { protocol, host } = window.location;
+  //     const { routerBasename } = this._appConfig;
+  //     const baseUri = `${protocol}//${host}${routerBasename}`;
 
-      const redirect_uri = firstOpenIdClient.redirect_uri || '/callback';
-      const silent_redirect_uri =
-        firstOpenIdClient.silent_redirect_uri || '/silent-refresh.html';
-      const post_logout_redirect_uri =
-        firstOpenIdClient.post_logout_redirect_uri || '/';
+  //     const redirect_uri = firstOpenIdClient.redirect_uri || '/callback';
+  //     const silent_redirect_uri =
+  //       firstOpenIdClient.silent_redirect_uri || '/silent-refresh.html';
+  //     const post_logout_redirect_uri =
+  //       firstOpenIdClient.post_logout_redirect_uri || '/';
 
-      const openIdConnectConfiguration = Object.assign({}, firstOpenIdClient, {
-        redirect_uri: _makeAbsoluteIfNecessary(redirect_uri, baseUri),
-        silent_redirect_uri: _makeAbsoluteIfNecessary(
-          silent_redirect_uri,
-          baseUri
-        ),
-        post_logout_redirect_uri: _makeAbsoluteIfNecessary(
-          post_logout_redirect_uri,
-          baseUri
-        ),
-      });
+  //     const openIdConnectConfiguration = Object.assign({}, firstOpenIdClient, {
+  //       redirect_uri: _makeAbsoluteIfNecessary(redirect_uri, baseUri),
+  //       silent_redirect_uri: _makeAbsoluteIfNecessary(
+  //         silent_redirect_uri,
+  //         baseUri
+  //       ),
+  //       post_logout_redirect_uri: _makeAbsoluteIfNecessary(
+  //         post_logout_redirect_uri,
+  //         baseUri
+  //       ),
+  //     });
 
-      this._userManager = getUserManagerForOpenIdConnectClient(
-        store,
-        openIdConnectConfiguration
-      );
-    }
-  }
+  //     this._userManager = getUserManagerForOpenIdConnectClient(
+  //       store,
+  //       openIdConnectConfiguration
+  //     );
+  //   }
+  // }
 }
 
 function _initServices(services) {
@@ -254,7 +258,7 @@ function _initExtensions(extensions, cornerstoneExtensionConfig, appConfig) {
     /* WARNING: MUST BE REGISTERED _AFTER_ OHIFCornerstoneExtension */
     //MeasurementsPanel,
   ];
-  const mergedExtensions = requiredExtensions.concat(extensions);
+  // const mergedExtensions = requiredExtensions.concat(extensions);
   extensionManager.registerExtensions(requiredExtensions); //mergedExtensions); !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -281,30 +285,30 @@ function _initHotkeys(appConfigHotkeys) {
   hotkeysManager.setDefaultHotKeys(appConfigHotkeys);
 }
 
-function _initServers(servers) {
-  if (servers) {
-    utils.addServers(servers, store);
-  }
-}
+// function _initServers(servers) {
+//   if (servers) {
+//     utils.addServers(servers, store);
+//   }
+// }
 
-function _isAbsoluteUrl(url) {
-  return url.includes('http://') || url.includes('https://');
-}
+// function _isAbsoluteUrl(url) {
+//   return url.includes('http://') || url.includes('https://');
+// }
 
-function _makeAbsoluteIfNecessary(url, base_url) {
-  if (_isAbsoluteUrl(url)) {
-    return url;
-  }
+// function _makeAbsoluteIfNecessary(url, base_url) {
+//   if (_isAbsoluteUrl(url)) {
+//     return url;
+//   }
 
-  /*
-   * Make sure base_url and url are not duplicating slashes.
-   */
-  if (base_url[base_url.length - 1] === '/') {
-    base_url = base_url.slice(0, base_url.length - 1);
-  }
+//   /*
+//    * Make sure base_url and url are not duplicating slashes.
+//    */
+//   if (base_url[base_url.length - 1] === '/') {
+//     base_url = base_url.slice(0, base_url.length - 1);
+//   }
 
-  return base_url + url;
-}
+//   return base_url + url;
+// }
 
 /*
  * Only wrap/use hot if in dev.

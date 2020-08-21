@@ -176,6 +176,7 @@ const commandsModule = ({ servicesManager }) => {
         });
       }
     },
+
     updateTableWithNewMeasurementData({
       toolType,
       measurementNumber,

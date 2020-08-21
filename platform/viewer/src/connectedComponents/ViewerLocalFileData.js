@@ -17,49 +17,47 @@ import filesToStudies from '../lib/filesToStudies';
 import './ViewerLocalFileData.css';
 import { withTranslation } from 'react-i18next';
 
-console.log('ez még ok');
-
 const { OHIFStudyMetadata } = metadata;
 const { studyMetadataManager } = utils;
 const Viewer_ = connect()(Viewer);
 
-const dropZoneLinkDialog = (onDrop, i18n, dir) => {
-  return (
-    <Dropzone onDrop={onDrop} noDrag>
-      {({ getRootProps, getInputProps }) => (
-        <span {...getRootProps()} className="link-dialog">
-          {dir ? (
-            <span>
-              {i18n('Load folders')}
-              <input
-                {...getInputProps()}
-                webkitdirectory="true"
-                mozdirectory="true"
-              />
-            </span>
-          ) : (
-            <span>
-              {i18n('Load files')}
-              <input {...getInputProps()} />
-            </span>
-          )}
-        </span>
-      )}
-    </Dropzone>
-  );
-};
+// const dropZoneLinkDialog = (onDrop, i18n, dir) => {
+//   return (
+//     <Dropzone onDrop={onDrop} noDrag>
+//       {({ getRootProps, getInputProps }) => (
+//         <span {...getRootProps()} className="link-dialog">
+//           {dir ? (
+//             <span>
+//               {i18n('Load folders')}
+//               <input
+//                 {...getInputProps()}
+//                 webkitdirectory="true"
+//                 mozdirectory="true"
+//               />
+//             </span>
+//           ) : (
+//             <span>
+//               {i18n('Load files')}
+//               <input {...getInputProps()} />
+//             </span>
+//           )}
+//         </span>
+//       )}
+//     </Dropzone>
+//   );
+// };
 
-const linksDialogMessage = (onDrop, i18n) => {
-  return (
-    <>
-      {i18n('Or click to ')}
-      {dropZoneLinkDialog(onDrop, i18n)}
-      {i18n(' or ')}
-      {dropZoneLinkDialog(onDrop, i18n, true)}
-      {i18n(' from dialog')}
-    </>
-  );
-};
+// const linksDialogMessage = (onDrop, i18n) => {
+//   return (
+//     <>
+//       {i18n('Or click to ')}
+//       {dropZoneLinkDialog(onDrop, i18n)}
+//       {i18n(' or ')}
+//       {dropZoneLinkDialog(onDrop, i18n, true)}
+//       {i18n(' from dialog')}
+//     </>
+//   );
+// };
 
 class ViewerLocalFileData extends Component {
   static propTypes = {
@@ -73,7 +71,6 @@ class ViewerLocalFileData extends Component {
   };
 
   updateStudies = studies => {
-    console.log('update studies');
     // Render the viewer when the data is ready
     studyMetadataManager.purge();
 
@@ -94,17 +91,13 @@ class ViewerLocalFileData extends Component {
 
       // displayset = széria
       studyMetadata.forEachDisplaySet(displayset => {
-        console.log('foreach display set', displayset);
         displayset.localFile = true;
       });
 
       studyMetadataManager.add(studyMetadata);
-
-      console.log('study in updatestudies: ', study);
       return study;
     });
 
-    console.log('most tölti be a store ba a studykat');
     this.setState({
       studies: updatedStudies,
     });
@@ -112,7 +105,6 @@ class ViewerLocalFileData extends Component {
 
   render() {
     const onDrop = async acceptedFiles => {
-      console.log('setstate loading');
       this.setState({ loading: true });
       console.log('accepted files', acceptedFiles);
 
@@ -121,9 +113,7 @@ class ViewerLocalFileData extends Component {
       console.log('flattened studies: ', studies);
       const updatedStudies = this.updateStudies(studies);
 
-      console.log('before if updated');
       if (!updatedStudies) {
-        console.log('inside if updated');
         return;
       }
 
@@ -139,8 +129,6 @@ class ViewerLocalFileData extends Component {
       <Dropzone onDrop={onDrop} noClick>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} style={{ width: '100%', height: '100%' }}>
-            {console.log('before state.studies')}
-
             {this.state.studies ? (
               <Viewer_
                 studies={this.state.studies}

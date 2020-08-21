@@ -233,7 +233,7 @@ const ViewportDownloadForm = ({
 
     refreshViewport.current = setTimeout(() => {
       refreshViewport.current = null;
-      loadAndUpdateViewports();
+      //loadAndUpdateViewports();****************************************************
     }, REFRESH_VIEWPORT_TIMEOUT);
   }, [
     activeViewport,
@@ -262,10 +262,10 @@ const ViewportDownloadForm = ({
 
   return (
     <div className="ViewportDownloadForm">
-      <div className="title">{t('formTitle')}</div>
+      {/* <div className="title">{t('formTitle')}</div> */}
 
-      <div className="file-info-container" data-cy="file-info-container">
-        <div className="dimension-wrapper">
+      {/* <div className="file-info-container" data-cy="file-info-container"> */}
+      {/* <div className="dimension-wrapper">
           <div className="dimensions">
             <div className="width">
               <TextInput
@@ -309,8 +309,8 @@ const ViewportDownloadForm = ({
               />
             </button>
           </div>
-        </div>
-
+        </div> */}
+      {/*
         <div className="col">
           <div className="file-name">
             <TextInput
@@ -332,9 +332,9 @@ const ViewportDownloadForm = ({
               label={t('fileType')}
             />
           </div>
-        </div>
+        </div> */}
 
-        <div className="col">
+      {/* <div className="col">
           <div className="show-annotations">
             <label htmlFor="show-annotations" className="form-check-label">
               <input
@@ -348,8 +348,8 @@ const ViewportDownloadForm = ({
               {t('showAnnotations')}
             </label>
           </div>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       <div
         style={{
@@ -360,7 +360,7 @@ const ViewportDownloadForm = ({
         }}
         ref={ref => setViewportElement(ref)}
       >
-        <canvas
+        {/* <canvas
           className={canvasClass}
           style={{
             height: downloadCanvas.height,
@@ -370,10 +370,10 @@ const ViewportDownloadForm = ({
           width={downloadCanvas.width}
           height={downloadCanvas.height}
           ref={downloadCanvas.ref}
-        ></canvas>
+        ></canvas> */}
       </div>
 
-      {viewportPreview.src ? (
+      {/* {viewportPreview.src ? (
         <div className="preview" data-cy="image-preview">
           <div className="preview-header"> {t('imagePreview')}</div>
           <img
@@ -389,7 +389,7 @@ const ViewportDownloadForm = ({
           <Icon name="circle-notch" className="icon-spin" />
           {t('loadingPreview')}
         </div>
-      )}
+      )} */}
 
       <div className="actions">
         <div className="action-cancel">
