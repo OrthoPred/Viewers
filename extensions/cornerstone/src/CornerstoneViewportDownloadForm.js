@@ -4,14 +4,21 @@
 import JSZip from 'jszip';
 
 import React from 'react';
-import cornerstone from 'cornerstone-core';
-import cornerstoneTools from 'cornerstone-tools';
+// import cornerstone from 'cornerstone-core';
+// import cornerstoneTools from 'cornerstone-tools';
 import PropTypes from 'prop-types';
 
-import { ViewportDownloadForm } from '@ohif/ui';
-import { utils } from '@ohif/core';
+// import { ViewportDownloadForm } from '@ohif/ui';
+// import { utils } from '@ohif/core';
+import Progress from '../../../platform/viewer/src/progress';
+import '../../../platform/viewer/src/progress/progress.css';
 
-import { getEnabledElement } from './state';
+import { useTranslation } from 'react-i18next';
+
+import '@ohif/ui/src/components/content/viewportDownloadForm/ViewportDownloadForm.styl';
+import { render } from 'stylus';
+
+// import { getEnabledElement } from './state';
 
 const REQUIRED_TAGS = [
   'Modality',
@@ -53,120 +60,30 @@ const REQUIRED_TAGS = [
   'WindowWidth',
 ];
 
-const MINIMUM_SIZE = 100;
-const DEFAULT_SIZE = 512;
-const MAX_TEXTURE_SIZE = 10000;
+var prgs = {};
+var zipProgress = 10;
 
 const CornerstoneViewportDownloadForm = ({
   onClose,
-  activeViewportIndex,
+  // activeViewportIndex,
   studies,
 }) => {
-  const activeEnabledElement = getEnabledElement(activeViewportIndex);
-
-  const enableViewport = viewportElement => {
-    if (viewportElement) {
-      cornerstone.enable(viewportElement);
-    }
-  };
-
-  const disableViewport = viewportElement => {
-    if (viewportElement) {
-      cornerstone.disable(viewportElement);
-    }
-  };
-
-  const updateViewportPreview = (viewportElement, downloadCanvas, fileType) =>
-    new Promise(resolve => {
-      cornerstone.fitToWindow(viewportElement);
-
-      viewportElement.addEventListener(
-        'cornerstoneimagerendered',
-        function updateViewport(event) {
-          const enabledElement = cornerstone.getEnabledElement(event.target)
-            .element;
-          const type = 'image/' + fileType;
-          const dataUrl = downloadCanvas.toDataURL(type, 1);
-
-          let newWidth = enabledElement.offsetHeight;
-          let newHeight = enabledElement.offsetWidth;
-
-          if (newWidth > DEFAULT_SIZE || newHeight > DEFAULT_SIZE) {
-            const multiplier = DEFAULT_SIZE / Math.max(newWidth, newHeight);
-            newHeight *= multiplier;
-            newWidth *= multiplier;
-          }
-
-          resolve({ dataUrl, width: newWidth, height: newHeight });
-
-          viewportElement.removeEventListener(
-            'cornerstoneimagerendered',
-            updateViewport
-          );
-        }
-      );
-    });
-
-  const loadImage = (activeViewport, viewportElement, width, height) =>
-    new Promise(resolve => {
-      if (activeViewport && viewportElement) {
-        const enabledElement = cornerstone.getEnabledElement(activeViewport);
-        const viewport = Object.assign({}, enabledElement.viewport);
-        delete viewport.scale;
-        viewport.translation = {
-          x: 0,
-          y: 0,
-        };
-
-        console.log('loadimage id: ', enabledElement);
-        cornerstone.loadImage(enabledElement.image.imageId).then(image => {
-          console.log('image:', image.windowCenter, image.windowWidth);
-
-          cornerstone.displayImage(viewportElement, image);
-          cornerstone.setViewport(viewportElement, viewport);
-          cornerstone.resize(viewportElement, true);
-
-          const newWidth = Math.min(width || image.width, MAX_TEXTURE_SIZE);
-          const newHeight = Math.min(height || image.height, MAX_TEXTURE_SIZE);
-
-          resolve({ image, width: newWidth, height: newHeight });
-        });
-      }
-    });
-
-  const toggleAnnotations = (toggle, viewportElement) => {
-    cornerstoneTools.store.state.tools.forEach(({ name }) => {
-      if (toggle) {
-        cornerstoneTools.setToolEnabledForElement(viewportElement, name);
-      } else {
-        cornerstoneTools.setToolDisabledForElement(viewportElement, name);
-      }
-    });
-  };
-
-  const downloadBlob = (
-    filename,
-    fileType,
-    viewportElement,
-    downloadCanvas,
-    studies
-  ) => {
+  const downloadBlob = studies => {
+    console.log('before zipAll', studies);
     zipAll(studies).then(function(output) {
       //accept
-      const url = window.URL.createObjectURL(output);
-      console.log(url);
-      var link = document.createElement('a');
-      link.href = url;
-      link.target = '_blank';
-      link.download = 'jsons.zip';
-
-      link.click();
-      onClose();
-      // onClose: UIModalService.hide,
+      console.log('after zipAll, before sendreq');
+      sendRequest(output).then(function() {
+        onClose();
+      });
+      console.log('after sendreq');
     });
   };
 
-  var zipAll = function(studies) {
+  const [t] = useTranslation('ViewportDownloadForm');
+
+  var zipAll = function() {
+    var element = document.getElementById('myBar');
     return new Promise(function(resolve, reject) {
       var meta_tags = {};
 
@@ -186,11 +103,6 @@ const CornerstoneViewportDownloadForm = ({
             const img_path = `${study.StudyInstanceUID}/${serie.SeriesInstanceUID}/${instance.url}.dci`;
             zip.file(img_path.replace(':', '_'), img_blob);
 
-            // var link = document.createElement('a');
-            // link.href = window.URL.createObjectURL(blob);
-            // link.download = 'proba.dci';
-            // link.click();
-
             //Convert JSON Array to string.
             var json = JSON.stringify(meta_tags);
             //Convert JSON string to BLOB.
@@ -205,27 +117,115 @@ const CornerstoneViewportDownloadForm = ({
         });
       });
 
-      const blob = zip.generateAsync({ type: 'blob' });
+      const blob = zip.generateAsync({ type: 'blob' }, function updateCallback(
+        metadata
+      ) {
+        zipProgress = metadata.percent.toFixed(2);
+        element.style.width = zipProgress + '%';
+        console.log('zip progress: ', zipProgress + ' %');
+      });
+
+      // const blob = zip.generateAsync({ type: 'blob' });
       resolve(blob);
     });
   };
 
+  // const downloadImage = () => {
+  //   console.log('studies from vp dl form:', studies);
+  //   downloadBlob(studies);
+  // };
+
+  var sendRequest = function(file) {
+    return new Promise((resolve, reject) => {
+      const req = new XMLHttpRequest();
+
+      req.upload.addEventListener('progress', event => {
+        if (event.lengthComputable) {
+          const copy = prgs;
+          copy[file.name] = {
+            state: 'pending',
+            percentage: (event.loaded / event.total) * 100,
+          };
+          console.log('progress: ', (event.loaded / event.total) * 100);
+          prgs = copy;
+          console.log('prgs progress: ', prgs.percentage);
+        }
+      });
+
+      req.upload.addEventListener('load', event => {
+        const copy = prgs;
+        copy[file.name] = { state: 'done', percentage: 100 };
+        prgs = copy;
+        console.log('upload event load');
+        resolve(req.response);
+      });
+
+      req.upload.addEventListener('error', event => {
+        const copy = prgs;
+        copy[file.name] = { state: 'error', percentage: 0 };
+        prgs = copy;
+        console.log('upload event error');
+        reject(req.response);
+      });
+
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      req.open('POST', '/api/upload');
+      req.send(formData);
+    });
+  };
+
   return (
-    <ViewportDownloadForm
-      studies={studies}
-      onClose={onClose}
-      minimumSize={MINIMUM_SIZE}
-      maximumSize={MAX_TEXTURE_SIZE}
-      defaultSize={DEFAULT_SIZE}
-      canvasClass={'cornerstone-canvas'}
-      activeViewport={activeEnabledElement}
-      enableViewport={enableViewport}
-      disableViewport={disableViewport}
-      updateViewportPreview={updateViewportPreview}
-      loadImage={loadImage}
-      toggleAnnotations={toggleAnnotations}
-      downloadBlob={downloadBlob}
-    />
+    <div>
+      <div className="ProgressWrapper" id="myBar">
+        <div className="ProgressBar">
+          <div
+            className="Progress"
+            // style={{ width: this.props.progress + '%' }}
+          />
+        </div>
+      </div>
+
+      <img
+        className="CheckIcon"
+        alt="done"
+        src="baseline-check_circle_outline-24px.svg"
+        style={{
+          opacity: 0, //prgs && prgs.state === 'done' ? 0.5 : 0,
+        }}
+      />
+      {/* <ViewportDownloadForm
+        studies={studies}
+        onClose={onClose}
+        downloadBlob={downloadBlob}
+      ></ViewportDownloadForm> */}
+
+      <div className="ViewportDownloadForm">
+        <div className="actions">
+          <div className="action-cancel">
+            <button
+              type="button"
+              data-cy="cancel-btn"
+              className="btn btn-danger"
+              onClick={onClose}
+            >
+              {t('Buttons:Cancel')}
+            </button>
+          </div>
+          <div className="action-save">
+            <button
+              // disabled={hasError}
+              onClick={downloadBlob}
+              className="btn btn-primary"
+              data-cy="download-btn"
+            >
+              {t('Buttons:Download')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

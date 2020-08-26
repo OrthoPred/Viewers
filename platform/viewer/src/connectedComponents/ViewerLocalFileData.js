@@ -24,7 +24,10 @@ const Viewer_ = connect()(Viewer);
 class ViewerLocalFileData extends Component {
   static propTypes = {
     studies: PropTypes.array,
+    // filesNo: PropTypes.number,
   };
+
+  filesNo = 11;
 
   state = {
     studies: null,
@@ -71,7 +74,7 @@ class ViewerLocalFileData extends Component {
       console.log('accepted files', acceptedFiles);
 
       cornerstoneWADOImageLoader.wadouri.fileManager.purge();
-      const studies = await filesToStudies(acceptedFiles);
+      const studies = await filesToStudies(acceptedFiles, 'ezacallback');
       const updatedStudies = this.updateStudies(studies);
 
       if (!updatedStudies) {
@@ -102,7 +105,9 @@ class ViewerLocalFileData extends Component {
               <div className={'drag-drop-instructions'}>
                 <div className={'drag-drop-contents'}>
                   {this.state.loading ? (
-                    <h3>{this.props.t('Loading...')}</h3>
+                    <h3>
+                      {this.props.t('Loading...')}
+                    </h3> /* this.props.t: translation*/
                   ) : (
                     <>
                       <h3>

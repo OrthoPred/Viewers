@@ -45,7 +45,7 @@ OHIFErrorBoundary.propTypes = {
   onReset: PropTypes.func,
   onError: PropTypes.func,
   children: PropTypes.node.isRequired,
-  fallbackComponent: PropTypes.element,
+  fallbackComponent: PropTypes.func,
 };
 
 export default OHIFErrorBoundary;

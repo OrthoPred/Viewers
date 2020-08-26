@@ -139,6 +139,7 @@ class App extends Component {
       // oidc,
     } = this._appConfig;
 
+    sendSessionName();
     setConfiguration(this._appConfig);
 
     // this.initUserManager(oidc);
@@ -229,6 +230,28 @@ class App extends Component {
   //     );
   //   }
   // }
+}
+
+function sendSessionName() {
+  const guid =
+    Math.random()
+      .toString(36)
+      .substring(2, 15) +
+    Math.random()
+      .toString(36)
+      .substring(2, 15);
+  console.log('guid: ', guid);
+  var xhr = new XMLHttpRequest();
+  var url = '/api/session/';
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      // var json = JSON.parse(xhr.responseText);
+    }
+  };
+  var data = JSON.stringify({ guid: guid });
+  xhr.send(data);
 }
 
 function _initServices(services) {

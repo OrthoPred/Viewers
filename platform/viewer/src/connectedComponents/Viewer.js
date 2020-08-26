@@ -79,9 +79,9 @@ class Viewer extends Component {
     onTimepointsUpdated: PropTypes.func,
     onMeasurementsUpdated: PropTypes.func,
     // window.store.getState().viewports.viewportSpecificData
-    viewports: PropTypes.object.isRequired,
+    viewports: PropTypes.object, //.isRequired,
     // window.store.getState().viewports.activeViewportIndex
-    activeViewportIndex: PropTypes.number.isRequired,
+    activeViewportIndex: PropTypes.number, //.isRequired,
     isStudyLoaded: PropTypes.bool,
     dialog: PropTypes.object,
   };
