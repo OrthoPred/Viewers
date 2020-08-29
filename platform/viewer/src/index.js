@@ -23,7 +23,7 @@ import ReactDOM from 'react-dom';
  * by using the exported `App` component, and passing in your extensions as props using
  * the defaultExtensions property.
  */
-import OHIFVTKExtension from '@ohif/extension-vtk';
+// import OHIFVTKExtension from '@ohif/extension-vtk';
 // import OHIFDicomHtmlExtension from '@ohif/extension-dicom-html';
 // import OHIFDicomSegmentationExtension from '@ohif/extension-dicom-segmentation';
 // import OHIFDicomRtExtension from '@ohif/extension-dicom-rt';
@@ -43,7 +43,7 @@ if (window) {
 const appProps = {
   config,
   defaultExtensions: [
-    OHIFVTKExtension,
+    // OHIFVTKExtension,
     //OHIFDicomHtmlExtension,
     //OHIFDicomMicroscopyExtension,
     //OHIFDicomPDFExtension,

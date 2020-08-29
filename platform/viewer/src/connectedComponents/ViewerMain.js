@@ -18,7 +18,6 @@ import ViewportGrid from './../components/ViewportGrid/ViewportGrid.js';
 import { MODULE_TYPES } from '@ohif/core';
 import { connect } from 'react-redux';
 import { extensionManager } from './../App.js';
-// import memoize from 'lodash/memoize';
 
 const getAvailableViewportModules = memoize(viewportModules => {
   const availableViewportModules = {};
@@ -53,10 +52,7 @@ const mapStateToProps = state => {
   };
 };
 
-const ConnectedViewportGrid = connect(
-  mapStateToProps,
-  null
-)(ViewportGrid);
+const ConnectedViewportGrid = connect(mapStateToProps, null)(ViewportGrid);
 
 var values = memoize(_values);
 
@@ -125,14 +121,14 @@ class ViewerMain extends Component {
     console.log('viewpots::::::', this.props.viewports);
     const prevViewportAmount = prevProps.layout.viewports.length;
     const viewportAmount = this.props.layout.viewports.length;
-    const isVtk = this.props.layout.viewports.some(vp => !!vp.vtk);
+    // const isVtk = this.props.layout.viewports.some(vp => !!vp.vtk);
 
     console.log('props.studies= ', this.props.studies);
     console.log('prevProps.studies= ', prevProps.studies);
 
     if (
       this.props.studies !== prevProps.studies ||
-      (viewportAmount !== prevViewportAmount && !isVtk)
+      viewportAmount !== prevViewportAmount //&& !isVtk)
     ) {
       console.log('componentDidUpdate study not equal');
       const displaySets = this.getDisplaySets(this.props.studies);

@@ -5,12 +5,12 @@ import { ServicesManager } from './services';
 import classes, { CommandsManager, HotkeysManager } from './classes/';
 
 import DICOMWeb from './DICOMWeb';
-import DICOMSR from './DICOMSR';
+// import DICOMSR from './DICOMSR';
 import cornerstone from './cornerstone.js';
-import hangingProtocols from './hanging-protocols';
+//import hangingProtocols from './hanging-protocols';
 import header from './header.js';
 import log from './log.js';
-import measurements from './measurements';
+// import measurements from './measurements';
 import metadata from './classes/metadata/';
 import object from './object.js';
 import redux from './redux/';
@@ -25,7 +25,7 @@ import {
   UINotificationService,
   UIModalService,
   UIDialogService,
-  MeasurementService,
+  // MeasurementService,
 } from './services';
 
 const OHIF = {
@@ -51,15 +51,15 @@ const OHIF = {
   object,
   log,
   DICOMWeb,
-  DICOMSR,
+  // DICOMSR,
   viewer: {},
-  measurements,
-  hangingProtocols,
+  // measurements,
+  // hangingProtocols,
   //
   UINotificationService,
   UIModalService,
   UIDialogService,
-  MeasurementService,
+  // MeasurementService,
 };
 
 export {
@@ -85,14 +85,14 @@ export {
   object,
   log,
   DICOMWeb,
-  DICOMSR,
-  measurements,
-  hangingProtocols,
+  // DICOMSR,
+  // measurements,
+  //hangingProtocols,
   //
   UINotificationService,
   UIModalService,
   UIDialogService,
-  MeasurementService,
+  // MeasurementService,
 };
 
 export { OHIF };

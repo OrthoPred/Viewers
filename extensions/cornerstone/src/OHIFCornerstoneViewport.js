@@ -189,7 +189,6 @@ class OHIFCornerstoneViewport extends Component {
   }
 
   render() {
-    console.log('OHIFCornerstoneViewport render');
     let childrenWithProps = null;
 
     if (!this.state.viewportData) {

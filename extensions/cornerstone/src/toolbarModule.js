@@ -128,7 +128,7 @@ const definitions = [
 
   {
     id: 'Download',
-    label: 'Download',
+    label: 'Upload',
     icon: 'create-screen-capture',
     //
     type: TOOLBAR_BUTTON_TYPES.BUILT_IN,

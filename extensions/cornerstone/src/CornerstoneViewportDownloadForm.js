@@ -10,13 +10,13 @@ import PropTypes from 'prop-types';
 
 // import { ViewportDownloadForm } from '@ohif/ui';
 // import { utils } from '@ohif/core';
-import Progress from '../../../platform/viewer/src/progress';
+// import Progress from '../../../platform/viewer/src/progress';
 import '../../../platform/viewer/src/progress/progress.css';
 
 import { useTranslation } from 'react-i18next';
 
-import '@ohif/ui/src/components/content/viewportDownloadForm/ViewportDownloadForm.styl';
-import { render } from 'stylus';
+// import '@ohif/ui/src/components/content/viewportDownloadForm/ViewportDownloadForm.styl';
+// import { render } from 'stylus';
 
 // import { getEnabledElement } from './state';
 
@@ -61,7 +61,8 @@ const REQUIRED_TAGS = [
 ];
 
 var prgs = {};
-var zipProgress = 10;
+var zipProgress = 0;
+var uploadProgress = 0;
 
 const CornerstoneViewportDownloadForm = ({
   onClose,
@@ -136,6 +137,7 @@ const CornerstoneViewportDownloadForm = ({
   // };
 
   var sendRequest = function(file) {
+    var element = document.getElementById('myBar');
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
 
@@ -146,9 +148,10 @@ const CornerstoneViewportDownloadForm = ({
             state: 'pending',
             percentage: (event.loaded / event.total) * 100,
           };
-          console.log('progress: ', (event.loaded / event.total) * 100);
-          prgs = copy;
-          console.log('prgs progress: ', prgs.percentage);
+          uploadProgress = (event.loaded / event.total) * 100;
+          //  = metadata.percent.toFixed(2);
+          element.style.width = uploadProgress + '%';
+          console.log('upload progress: ', uploadProgress + ' %');
         }
       });
 
@@ -180,10 +183,7 @@ const CornerstoneViewportDownloadForm = ({
     <div>
       <div className="ProgressWrapper" id="myBar">
         <div className="ProgressBar">
-          <div
-            className="Progress"
-            // style={{ width: this.props.progress + '%' }}
-          />
+          <div className="Progress" style={{ width: 0 + '%' }} />
         </div>
       </div>
 
@@ -220,7 +220,7 @@ const CornerstoneViewportDownloadForm = ({
               className="btn btn-primary"
               data-cy="download-btn"
             >
-              {t('Buttons:Download')}
+              {t('Buttons:Upload')}
             </button>
           </div>
         </div>

@@ -19,8 +19,27 @@ class FileLoaderService extends FileLoader {
       let nonKeyCounter = 1;
 
       return list.reduce((acc, obj) => {
-        let key = obj[groupByKey];
-        const list = obj[listKey];
+        //acc: The initialValue, or the previously returned value of the function
+        //obj: The value of the current element
+        //The reduce() method reduces the array to a single value.
+        //The reduce() method executes a provided function for each value of the array (from left-to-right).
+
+        if (groupByKey === 'StudyInstanceUID') {
+          if (typeof obj === 'undefined') {
+            return acc;
+          } else if (typeof obj.StudyInstanceUID === 'undefined') {
+            return acc;
+          }
+        }
+
+        console.log('acc: ', acc);
+        console.log('obj: ', obj);
+        console.log('key: ', groupByKey);
+
+        let key = obj[groupByKey]; //obj: The value of the current element
+        //groupByKey: először: 'StudyInstanceUID' , aztán 'SeriesInstanceUID'
+        const list = obj[listKey]; //obj: The value of the current element
+        // listKey először: 'series' , aztán 'instances' (kép)
 
         // in case key not found, group it using counter
         key = !!key ? key : '' + nonKeyCounter++;
@@ -33,7 +52,7 @@ class FileLoaderService extends FileLoader {
         acc[key][listKey].push(...list);
 
         return acc;
-      }, {});
+      }, {}); //{}: initial value
     };
 
     const studiesGrouped = Object.values(

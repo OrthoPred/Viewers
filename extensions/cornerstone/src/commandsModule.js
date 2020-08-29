@@ -112,40 +112,40 @@ const commandsModule = ({ servicesManager }) => {
         return;
       }
 
-      const imageIdToolState = toolState[enabledElement.image.imageId];
+      // const imageIdToolState = toolState[enabledElement.image.imageId];
 
-      const measurementsToRemove = [];
+      // const measurementsToRemove = [];
 
-      Object.keys(imageIdToolState).forEach(toolType => {
-        const { data } = imageIdToolState[toolType];
+      // Object.keys(imageIdToolState).forEach(toolType => {
+      //   const { data } = imageIdToolState[toolType];
 
-        data.forEach(measurementData => {
-          const {
-            _id,
-            lesionNamingNumber,
-            measurementNumber,
-          } = measurementData;
-          if (!_id) {
-            return;
-          }
+      // data.forEach(measurementData => {
+      //   const {
+      //     _id,
+      //     lesionNamingNumber,
+      //     measurementNumber,
+      //   } = measurementData;
+      //   if (!_id) {
+      //     return;
+      //   }
 
-          measurementsToRemove.push({
-            toolType,
-            _id,
-            lesionNamingNumber,
-            measurementNumber,
-          });
-        });
-      });
+      //   measurementsToRemove.push({
+      //     toolType,
+      //     _id,
+      //     lesionNamingNumber,
+      //     measurementNumber,
+      //   });
+      // });
+      // });
 
-      measurementsToRemove.forEach(measurementData => {
-        OHIF.measurements.MeasurementHandlers.onRemoved({
-          detail: {
-            toolType: measurementData.toolType,
-            measurementData,
-          },
-        });
-      });
+      // measurementsToRemove.forEach(measurementData => {
+      //   OHIF.measurements.MeasurementHandlers.onRemoved({
+      //     detail: {
+      //       toolType: measurementData.toolType,
+      //       measurementData,
+      //     },
+      //   });
+      // });
     },
     nextImage: ({ viewports }) => {
       const enabledElement = getEnabledElement(viewports.activeViewportIndex);
@@ -177,29 +177,29 @@ const commandsModule = ({ servicesManager }) => {
       }
     },
 
-    updateTableWithNewMeasurementData({
-      toolType,
-      measurementNumber,
-      location,
-      description,
-    }) {
-      // Update all measurements by measurement number
-      const measurementApi = OHIF.measurements.MeasurementApi.Instance;
-      const measurements = measurementApi.tools[toolType].filter(
-        m => m.measurementNumber === measurementNumber
-      );
+    // updateTableWithNewMeasurementData({
+    //   toolType,
+    //   measurementNumber,
+    //   location,
+    //   description,
+    // }) {
+    //   // Update all measurements by measurement number
+    //   const measurementApi = OHIF.measurements.MeasurementApi.Instance;
+    //   const measurements = measurementApi.tools[toolType].filter(
+    //     m => m.measurementNumber === measurementNumber
+    //   );
 
-      measurements.forEach(measurement => {
-        measurement.location = location;
-        measurement.description = description;
+    //   measurements.forEach(measurement => {
+    //     measurement.location = location;
+    //     measurement.description = description;
 
-        measurementApi.updateMeasurement(measurement.toolType, measurement);
-      });
+    //     measurementApi.updateMeasurement(measurement.toolType, measurement);
+    //   });
 
-      measurementApi.syncMeasurementsAndToolData();
+    //   measurementApi.syncMeasurementsAndToolData();
 
-      refreshCornerstoneViewports();
-    },
+    //   refreshCornerstoneViewports();
+    // },
     getNearbyToolData({ element, canvasCoordinates, availableToolTypes }) {
       const nearbyTool = {};
       let pointNearTool = false;
@@ -320,11 +320,11 @@ const commandsModule = ({ servicesManager }) => {
       storeContexts: [],
       options: {},
     },
-    updateTableWithNewMeasurementData: {
-      commandFn: actions.updateTableWithNewMeasurementData,
-      storeContexts: [],
-      options: {},
-    },
+    // updateTableWithNewMeasurementData: {
+    //   commandFn: actions.updateTableWithNewMeasurementData,
+    //   storeContexts: [],
+    //   options: {},
+    // },
     showDownloadViewportModal: {
       commandFn: actions.showDownloadViewportModal,
       storeContexts: ['viewports'],

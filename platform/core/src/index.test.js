@@ -13,7 +13,7 @@ describe('Top level exports', () => {
       'UINotificationService',
       'UIModalService',
       'UIDialogService',
-      'MeasurementService',
+      // 'MeasurementService',
       //
       'utils',
       'hotkeys',
@@ -31,9 +31,9 @@ describe('Top level exports', () => {
       'object',
       'log',
       'DICOMWeb',
-      'DICOMSR',
+      // 'DICOMSR',
       'OHIF', //
-      'measurements',
+      // 'measurements',
       'hangingProtocols',
     ].sort();
 

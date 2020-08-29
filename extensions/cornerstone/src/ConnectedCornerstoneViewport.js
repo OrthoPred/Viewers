@@ -1,15 +1,15 @@
 import CornerstoneViewport from 'react-cornerstone-viewport';
 import OHIF from '@ohif/core';
 import { connect } from 'react-redux';
-import throttle from 'lodash.throttle';
+// import throttle from 'lodash.throttle';
 import { setEnabledElement } from './state';
 
 const { setViewportActive, setViewportSpecificData } = OHIF.redux.actions;
-const {
-  onAdded,
-  onRemoved,
-  onModified,
-} = OHIF.measurements.MeasurementHandlers;
+// const {
+//   onAdded,
+//   onRemoved,
+//   onModified,
+// } = OHIF.measurements.MeasurementHandlers;
 
 // TODO: Transition to enums for the action names so that we can ensure they stay up to date
 // everywhere they're used.

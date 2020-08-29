@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SimpleToolbarButton from './SimpleToolbarButton';
-import PlayClipButton from './PlayClipButton';
+// import PlayClipButton from './PlayClipButton';
 import { LayoutButton } from './../components/layoutButton';
 
 // TODO: This should not be built in the `@ohif/ui` component
@@ -116,20 +116,20 @@ export default class Toolbar extends Component {
       })
     ).isRequired,
     includeLayoutButton: PropTypes.bool.isRequired,
-    includePlayClipButton: PropTypes.bool.isRequired,
+    // includePlayClipButton: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     buttons: getDefaultButtonData(),
     includeLayoutButton: true,
-    includePlayClipButton: true,
+    // includePlayClipButton: true,
   };
 
   render() {
-    var maybePlayClipButton;
-    if (this.props.includePlayClipButton) {
-      maybePlayClipButton = <PlayClipButton />;
-    }
+    // var maybePlayClipButton;
+    // if (this.props.includePlayClipButton) {
+    //   maybePlayClipButton = <PlayClipButton />;
+    // }
 
     var maybeLayoutButton;
     if (this.props.includeLayoutButton) {
@@ -142,7 +142,7 @@ export default class Toolbar extends Component {
           {this.props.buttons.map((button, i) => {
             return <SimpleToolbarButton {...button} key={i} />;
           })}
-          {maybePlayClipButton}
+          {/* {maybePlayClipButton} */}
           {maybeLayoutButton}
         </div>
       </div>

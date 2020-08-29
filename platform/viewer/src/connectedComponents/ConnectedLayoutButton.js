@@ -23,10 +23,12 @@ const mapDispatchToProps = dispatch => {
       for (let i = 0; i < numViewports; i++) {
         // Hacky way to allow users to exit MPR "mode"
         const viewport = currentLayout.viewports[i];
-        let plugin = viewport && viewport.plugin;
-        if (viewport && viewport.vtk) {
-          plugin = 'cornerstone';
-        }
+
+        let plugin = 'cornerstone';
+        // let plugin = viewport && viewport.plugin;
+        // if (viewport && viewport.vtk) {
+        //   plugin = 'cornerstone';
+        // }
 
         viewports.push({
           plugin,
