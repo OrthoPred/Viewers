@@ -94,6 +94,7 @@ class ImageSet {
       const positionVector = refIppVec.clone().sub(ippVec);
       const distance = positionVector.dot(scanAxisNormal);
 
+      // console.log('image, distance: ', image, distance);
       return {
         distance,
         image,

@@ -1,22 +1,19 @@
-// import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
-
-import '../OHIFStandaloneViewer.css';
+import '../OHIFStandaloneViewer.css'; // kell!!!
+import './ViewerLocalFileData.css';
 import '../variables.css';
 import '../theme-tide.css';
 import { connect } from 'react-redux';
 import Viewer from './Viewer.js';
-
 import React, { Component } from 'react';
 import { metadata, utils } from '@ohif/core';
-
-//import ConnectedViewer from './ConnectedViewer.js';
 import PropTypes from 'prop-types';
 import { extensionManager } from './../App.js';
 import Dropzone from 'react-dropzone';
 import filesToStudies from '../lib/filesToStudies';
-import './ViewerLocalFileData.css';
 import { withTranslation } from 'react-i18next';
+import OHIF from '@ohif/core';
 
+const { StackManager } = OHIF.utils;
 const { OHIFStudyMetadata } = metadata;
 const { studyMetadataManager } = utils;
 const Viewer_ = connect()(Viewer);
@@ -24,10 +21,7 @@ const Viewer_ = connect()(Viewer);
 class ViewerLocalFileData extends Component {
   static propTypes = {
     studies: PropTypes.array,
-    // filesNo: PropTypes.number,
   };
-
-  filesNo = 11;
 
   state = {
     studies: null,
@@ -38,6 +32,7 @@ class ViewerLocalFileData extends Component {
   updateStudies = studies => {
     // Render the viewer when the data is ready
     studyMetadataManager.purge();
+    StackManager.clearStacks();
 
     // Map studies to new format, update metadata manager?
     const updatedStudies = studies.map(study => {
@@ -50,11 +45,11 @@ class ViewerLocalFileData extends Component {
         extensionManager.modules['sopClassHandlerModule'];
 
       study.displaySets =
-        study.displaySets ||
+        // study.displaySets ||
         studyMetadata.createDisplaySets(sopClassHandlerModules);
       studyMetadata.setDisplaySets(study.displaySets);
-
       // displayset = széria
+
       studyMetadata.forEachDisplaySet(displayset => {
         displayset.localFile = true;
       });
@@ -70,11 +65,19 @@ class ViewerLocalFileData extends Component {
 
   render() {
     const onDrop = async acceptedFiles => {
+      console.log('accepted files before slice', acceptedFiles);
+      if (acceptedFiles.length > 300) {
+        acceptedFiles = acceptedFiles.slice(0, 300);
+        console.log('too many files added, only the first 300 will be used');
+      }
+      console.log('accepted files after slice', acceptedFiles);
+      if (this.state.studies) {
+        this.setState({ studies: null, error: null });
+      }
       this.setState({ loading: true });
-      console.log('accepted files', acceptedFiles);
 
       cornerstoneWADOImageLoader.wadouri.fileManager.purge();
-      const studies = await filesToStudies(acceptedFiles, 'ezacallback');
+      const studies = await filesToStudies(acceptedFiles);
       const updatedStudies = this.updateStudies(studies);
 
       if (!updatedStudies) {
@@ -115,7 +118,6 @@ class ViewerLocalFileData extends Component {
                           'Drag and Drop DICOM files here to load them in the Viewer'
                         )}
                       </h3>
-                      {/* <h4>{linksDialogMessage(onDrop, this.props.t)}</h4> */}
                     </>
                   )}
                 </div>

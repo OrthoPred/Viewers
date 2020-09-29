@@ -39,7 +39,7 @@ export default {
     const ExtendedOHIFCornerstoneViewport = props => {
       const onNewImageHandler = jumpData => {
         commandsManager.runCommand('jumpToImage', jumpData);
-        console.log('jumpdata: ', jumpData);
+        // console.log('jumpdata: ', jumpData);
       };
       return (
         <OHIFCornerstoneViewport {...props} onNewImage={onNewImageHandler} />

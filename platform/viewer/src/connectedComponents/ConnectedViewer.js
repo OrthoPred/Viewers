@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import Viewer from './Viewer.js';
-import OHIF from '@ohif/core';
+// import OHIF from '@ohif/core';
 
-console.log('connected viewer');
+// console.log('connected viewer');
 //const { setTimepoints, setMeasurements } = OHIF.redux.actions;
 
 // const getActiveServer = servers => {

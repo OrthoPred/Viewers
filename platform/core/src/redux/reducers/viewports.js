@@ -168,16 +168,16 @@ const viewports = (state = DEFAULT_STATE, action) => {
     case SET_VIEWPORT: {
       return produce(state, draftState => {
         if (action.viewportSpecificData == undefined) {
-          console.log('return');
+          // console.log('return');
           return;
         }
         draftState.viewportSpecificData[action.viewportIndex] =
           draftState.viewportSpecificData[action.viewportIndex] || {};
 
-        console.log(
-          '----------------+++++++++++++',
-          action.viewportSpecificData
-        );
+        // console.log(
+        //   '----------------+++++++++++++',
+        //   action.viewportSpecificData
+        // );
 
         Object.keys(action.viewportSpecificData).forEach(key => {
           draftState.viewportSpecificData[action.viewportIndex][key] =

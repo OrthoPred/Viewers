@@ -1004,9 +1004,9 @@
     }; // Load entry module and return exports
     /******/
     /******/
-    /******/ /******/ return hotCreateRequire(
-      './index.js'
-    )((__webpack_require__.s = './index.js'));
+    /******/ /******/ return hotCreateRequire('./index.js')(
+      (__webpack_require__.s = './index.js')
+    );
     /******/
   })(
     /************************************************************************/
@@ -2146,9 +2146,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [1, 1, 1]],
-                green: [[0, 0, 0], [1, 1, 1]],
-                blue: [[0, 0, 0], [1, 1, 1]],
+                red: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                blue: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
               },
             },
             jet: {
@@ -2222,14 +2231,22 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0.0416, 0.0416], [0.365079, 1, 1], [1, 1, 1]],
+                red: [
+                  [0, 0.0416, 0.0416],
+                  [0.365079, 1, 1],
+                  [1, 1, 1],
+                ],
                 green: [
                   [0, 0, 0],
                   [0.365079, 0, 0],
                   [0.746032, 1, 1],
                   [1, 1, 1],
                 ],
-                blue: [[0, 0, 0], [0.746032, 0, 0], [1, 1, 1]],
+                blue: [
+                  [0, 0, 0],
+                  [0.746032, 0, 0],
+                  [1, 1, 1],
+                ],
               },
             },
             cool: {
@@ -2237,9 +2254,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [1, 1, 1]],
-                green: [[0, 1, 1], [1, 0, 0]],
-                blue: [[0, 1, 1], [1, 1, 1]],
+                red: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 1, 1],
+                  [1, 0, 0],
+                ],
+                blue: [
+                  [0, 1, 1],
+                  [1, 1, 1],
+                ],
               },
             },
             spring: {
@@ -2247,9 +2273,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 1, 1], [1, 1, 1]],
-                green: [[0, 0, 0], [1, 1, 1]],
-                blue: [[0, 1, 1], [1, 0, 0]],
+                red: [
+                  [0, 1, 1],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                blue: [
+                  [0, 1, 1],
+                  [1, 0, 0],
+                ],
               },
             },
             summer: {
@@ -2257,9 +2292,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [1, 1, 1]],
-                green: [[0, 0.5, 0.5], [1, 1, 1]],
-                blue: [[0, 0.4, 0.4], [1, 0.4, 0.4]],
+                red: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 0.5, 0.5],
+                  [1, 1, 1],
+                ],
+                blue: [
+                  [0, 0.4, 0.4],
+                  [1, 0.4, 0.4],
+                ],
               },
             },
             autumn: {
@@ -2267,9 +2311,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 1, 1], [1, 1, 1]],
-                green: [[0, 0, 0], [1, 1, 1]],
-                blue: [[0, 0, 0], [1, 0, 0]],
+                red: [
+                  [0, 1, 1],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                blue: [
+                  [0, 0, 0],
+                  [1, 0, 0],
+                ],
               },
             },
             winter: {
@@ -2277,9 +2330,18 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [1, 0, 0]],
-                green: [[0, 0, 0], [1, 1, 1]],
-                blue: [[0, 1, 1], [1, 0.5, 0.5]],
+                red: [
+                  [0, 0, 0],
+                  [1, 0, 0],
+                ],
+                green: [
+                  [0, 0, 0],
+                  [1, 1, 1],
+                ],
+                blue: [
+                  [0, 1, 1],
+                  [1, 0.5, 0.5],
+                ],
               },
             },
             bone: {
@@ -2287,14 +2349,22 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [0.746032, 0.652778, 0.652778], [1, 1, 1]],
+                red: [
+                  [0, 0, 0],
+                  [0.746032, 0.652778, 0.652778],
+                  [1, 1, 1],
+                ],
                 green: [
                   [0, 0, 0],
                   [0.365079, 0.319444, 0.319444],
                   [0.746032, 0.777778, 0.777778],
                   [1, 1, 1],
                 ],
-                blue: [[0, 0, 0], [0.365079, 0.444444, 0.444444], [1, 1, 1]],
+                blue: [
+                  [0, 0, 0],
+                  [0.365079, 0.444444, 0.444444],
+                  [1, 1, 1],
+                ],
               },
             },
             copper: {
@@ -2302,9 +2372,19 @@
               numColors: 256,
               gamma: 1,
               segmentedData: {
-                red: [[0, 0, 0], [0.809524, 1, 1], [1, 1, 1]],
-                green: [[0, 0, 0], [1, 0.7812, 0.7812]],
-                blue: [[0, 0, 0], [1, 0.4975, 0.4975]],
+                red: [
+                  [0, 0, 0],
+                  [0.809524, 1, 1],
+                  [1, 1, 1],
+                ],
+                green: [
+                  [0, 0, 0],
+                  [1, 0.7812, 0.7812],
+                ],
+                blue: [
+                  [0, 0, 0],
+                  [1, 0.4975, 0.4975],
+                ],
               },
             },
             spectral: {
@@ -5289,7 +5369,12 @@
                 };
                 Object(
                   _triggerEvent_js__WEBPACK_IMPORTED_MODULE_1__['default']
-                )(_events_js__WEBPACK_IMPORTED_MODULE_0__['events'], _events_js__WEBPACK_IMPORTED_MODULE_0__['default'].IMAGE_CACHE_CHANGED, eventDetails);
+                )(
+                  _events_js__WEBPACK_IMPORTED_MODULE_0__['events'],
+                  _events_js__WEBPACK_IMPORTED_MODULE_0__['default']
+                    .IMAGE_CACHE_CHANGED,
+                  eventDetails
+                );
               });
             }
           }
@@ -5377,7 +5462,7 @@
           function loadImageFromImageLoader(imageId, options) {
             var colonIndex = imageId.indexOf(':');
             var scheme = imageId.substring(0, colonIndex);
-            console.log('scheme: ', scheme);
+            // console.log('scheme: ', scheme);
             var loader = imageLoaders[scheme];
 
             if (loader === undefined || loader === null) {

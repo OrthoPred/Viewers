@@ -19,10 +19,10 @@ if (supportsServiceWorker && isNotLocalDevelopment) {
     // customize the UI prompt accordingly.
     const isFirstTimeUpdatedServiceWorkerIsWaiting =
       event.wasWaitingBeforeRegister === false;
-    console.log(
-      'isFirstTimeUpdatedServiceWorkerIsWaiting',
-      isFirstTimeUpdatedServiceWorkerIsWaiting
-    );
+    // console.log(
+    //   'isFirstTimeUpdatedServiceWorkerIsWaiting',
+    //   isFirstTimeUpdatedServiceWorkerIsWaiting
+    // );
 
     // Assumes your app has some sort of prompt UI element
     // that a user can either accept or reject.

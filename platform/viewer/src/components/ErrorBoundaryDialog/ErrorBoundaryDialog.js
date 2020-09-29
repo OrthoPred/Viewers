@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { ErrorBoundary, Icon } from '@ohif/ui';
-import { servicesManager } from './../../App';
+// import { servicesManager } from './../../App.js';
 
-import './ErrorBoundaryDialog.css';
+// console.log('imported in error boundry: ', servicesManager);
+
+// // commandsManager, extensionManager, hotkeysManager, servicesManager
+
+// // import './ErrorBoundaryDialog.css';
 
 // const { UIModalService } = servicesManager.services;
 
@@ -42,7 +46,7 @@ const ErrorBoundaryDialog = ({ context, children }) => {
     //   content: ErrorDialog,
     //   title: `Something went wrong in ${context}`,
     // });
-    console.log(context);
+    // console.log('context: ', context);
   };
 
   const fallbackComponent = () => (

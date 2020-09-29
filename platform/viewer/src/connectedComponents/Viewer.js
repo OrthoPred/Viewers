@@ -33,12 +33,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const ViewerMain_ = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ViewerMain);
+const ViewerMain_ = connect(mapStateToProps, mapDispatchToProps)(ViewerMain);
 
-// import { withDialog } from '@ohif/ui';
+import { withDialog } from '@ohif/ui';
 import ToolbarRow from './ToolbarRow.js'; // toolbar, enélkül is működik
 import ConnectedStudyBrowser from './ConnectedStudyBrowser.js'; //kell, ez a sidepanel!!
 // import ConnectedViewerMain from './ConnectedViewerMain.js';
@@ -107,9 +104,18 @@ class Viewer extends Component {
         thumbnails: _mapStudiesToThumbnails(studies),
       });
     }
+    // var dlg = this.props.dialog.create({
+    //   id: 'sff',
+    //   content: ez,
+    //   isDraggable: false,
+    //   centralize: true,
+    // });
+    // console.log('dialog created,', dlg);
   }
 
   componentDidUpdate(prevProps) {
+    // console.log('componentDidUpdate');
+
     const { studies, isStudyLoaded } = this.props;
     if (studies !== prevProps.studies) {
       this.setState({
@@ -165,16 +171,6 @@ class Viewer extends Component {
 
         {/* VIEWPORTS + SIDEPANELS */}
         <div className="FlexboxLayout">
-          {/* L- LEFT */}
-          {/* <ErrorBoundaryDialog context="LLeftSidePanel">
-            <SidePanel from="left" isOpen={true}>
-              <ConnectedStudyBrowser
-                studies={this.state.thumbnails}
-                studyMetadata={this.props.studies}
-              />
-            </SidePanel>
-          </ErrorBoundaryDialog> */}
-
           {/* LEFT */}
           <ErrorBoundaryDialog context="LeftSidePanel">
             <SidePanel from="left" isOpen={this.state.isLeftSidePanelOpen}>
@@ -200,7 +196,8 @@ class Viewer extends Component {
   }
 }
 
-export default Viewer; //withDialog(Viewer);
+export default withDialog(Viewer);
+// export default Viewer;
 
 /**
  * What types are these? Why do we have "mapping" dropped in here instead of in
@@ -229,12 +226,7 @@ const _mapStudiesToThumbnails = function(studies) {
       let imageId;
       let altImageText;
 
-      if (displaySet.Modality && displaySet.Modality === 'SEG') {
-        // TODO: We want to replace this with a thumbnail showing
-        // the segmentation map on the image, but this is easier
-        // and better than what we have right now.
-        altImageText = 'SEG';
-      } else if (displaySet.images && displaySet.images.length) {
+      if (displaySet.images && displaySet.images.length) {
         const imageIndex = Math.floor(displaySet.images.length / 2);
 
         imageId = displaySet.images[imageIndex].getImageId();
@@ -259,3 +251,28 @@ const _mapStudiesToThumbnails = function(studies) {
     };
   });
 };
+
+// const ez = () => {
+//   return (
+//     <div>
+//       <div className="ViewportDownloadForm">
+//         <div className="actions">
+//           <div className="action-cancel">
+//             <button
+//               type="button"
+//               data-cy="cancel-btn"
+//               className="btn btn-danger"
+//             >
+//               {'Cancel'}
+//             </button>
+//           </div>
+//           <div className="action-save">
+//             <button className="btn btn-primary" data-cy="download-btn">
+//               {'Upload'}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

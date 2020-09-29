@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
-// import { OidcProvider } from 'redux-oidc';
 import { I18nextProvider } from 'react-i18next';
 import PropTypes from 'prop-types'; //Runtime type checking for React props and similar objects.
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
-
 import OHIFCornerstoneExtension from '@ohif/extension-cornerstone';
-
 import { DndProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import i18n from '@ohif/i18n';
+import { setConfiguration } from './config';
+
+import guid from '@ohif/core/src/utils/guid';
 
 import {
-  //SnackbarProvider, //felugró státusz üzenet
+  SnackbarProvider, //felugró státusz üzenet
   ModalProvider, //felugró üzenet gombokkal
   DialogProvider,
   OHIFModal,
@@ -24,33 +25,16 @@ import {
   ExtensionManager,
   ServicesManager,
   HotkeysManager,
-  // UINotificationService,
+  UINotificationService,
   UIModalService,
-  // UIDialogService,
-  // MeasurementService,
+  UIDialogService,
   //utils,
   // redux as reduxOHIF,
 } from '@ohif/core';
 
-import i18n from '@ohif/i18n';
+import { initWebWorkers } from './utils/index.js';
 
-// TODO: This should not be here
-//import './config';
-import { setConfiguration } from './config';
-
-/** Utils */
-import {
-  //getUserManagerForOpenIdConnectClient,
-  initWebWorkers,
-} from './utils/index.js';
-
-/** Extensions */
-import { GenericViewerCommands } from './appExtensions';
-
-// /** Viewer */
-// import OHIFStandaloneViewer from './OHIFStandaloneViewer';
-
-/** Viewer */
+// import { GenericViewerCommands } from './appExtensions';
 import ViewerLocalFileData from './connectedComponents/ViewerLocalFileData';
 
 /** Store */
@@ -58,9 +42,26 @@ import { getActiveContexts } from './store/layout/selectors.js';
 import store from './store';
 
 /** Contexts */
-// import WhiteLabelingContext from './context/WhiteLabelingContext';
-// import UserManagerContext from './context/UserManagerContext';
 import { AppProvider, useAppContext, CONTEXTS } from './context/AppContext';
+
+import DrawBBoxTool from './DrawBBoxTool';
+// import { import as csTools, toolColors } from 'cornerstone-tools';
+
+import cornerstone from 'cornerstone-core';
+// import cornerstoneMath from 'cornerstone-math';
+import cornerstoneTools from 'cornerstone-tools';
+// import Hammer from 'hammerjs';
+
+cornerstoneTools.external.cornerstone = cornerstone;
+// cornerstoneTools.external.Hammer = Hammer;
+// cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+
+cornerstoneTools.init();
+
+// ...
+
+cornerstoneTools.addTool(DrawBBoxTool);
+cornerstoneTools.setToolEnabled('DrawBBox');
 
 /** ~~~~~~~~~~~~~ Application Setup */
 const commandsManagerConfig = {
@@ -71,6 +72,7 @@ const commandsManagerConfig = {
 /** Managers */
 const commandsManager = new CommandsManager(commandsManagerConfig);
 const servicesManager = new ServicesManager();
+console.log('const  sevicemanager ');
 const hotkeysManager = new HotkeysManager(commandsManager, servicesManager);
 let extensionManager;
 /** ~~~~~~~~~~~~~ End Application Setup */
@@ -93,9 +95,6 @@ class App extends Component {
       PropTypes.shape({
         routerBasename: PropTypes.string.isRequired,
         oidc: PropTypes.array,
-        // whiteLabeling: PropTypes.shape({
-        //   createLogoComponentFn: PropTypes.func,
-        // }),
         extensions: PropTypes.array,
       }),
     ]).isRequired,
@@ -112,7 +111,6 @@ class App extends Component {
   };
 
   _appConfig;
-  //_userManager;
 
   constructor(props) {
     super(props);
@@ -132,21 +130,18 @@ class App extends Component {
     };
 
     const {
-      // servers,
       hotkeys: appConfigHotkeys,
       cornerstoneExtensionConfig,
       extensions,
-      // oidc,
     } = this._appConfig;
 
     sendSessionName();
     setConfiguration(this._appConfig);
 
-    // this.initUserManager(oidc);
     _initServices([
-      // UINotificationService,
+      UINotificationService,
       UIModalService,
-      //UIDialogService,
+      UIDialogService,
       //MeasurementService,
     ]);
     _initExtensions(
@@ -160,14 +155,13 @@ class App extends Component {
      * if there is no hotkeys from localStorage set up from config.
      */
     _initHotkeys(appConfigHotkeys);
-    // _initServers(servers);
     initWebWorkers();
   }
 
   render() {
     const { routerBasename } = this._appConfig;
     const {
-      //UINotificationService,
+      UINotificationService,
       UIDialogService,
       UIModalService,
       //MeasurementService,
@@ -181,15 +175,17 @@ class App extends Component {
               {' '}
               {/*I18next is an internationalization-framework */}
               <Router basename={routerBasename}>
-                <DialogProvider service={UIDialogService}>
-                  <ModalProvider modal={OHIFModal} service={UIModalService}>
-                    {' '}
-                    {/* toolbarhoz kell !!! */}
-                    <DndProvider backend={HTML5Backend}>
-                      <ViewerLocalFileData />
-                    </DndProvider>
-                  </ModalProvider>
-                </DialogProvider>
+                <SnackbarProvider service={UINotificationService}>
+                  <DialogProvider service={UIDialogService}>
+                    <ModalProvider modal={OHIFModal} service={UIModalService}>
+                      {' '}
+                      {/* toolbarhoz kell !!! */}
+                      <DndProvider backend={HTML5Backend}>
+                        <ViewerLocalFileData />
+                      </DndProvider>
+                    </ModalProvider>
+                  </DialogProvider>
+                </SnackbarProvider>
               </Router>
             </I18nextProvider>
           </AppProvider>
@@ -197,50 +193,11 @@ class App extends Component {
       </ErrorBoundary>
     );
   }
-
-  // initUserManager(oidc) {
-  //   if (oidc && !!oidc.length) {
-  //     const firstOpenIdClient = this._appConfig.oidc[0];
-
-  //     const { protocol, host } = window.location;
-  //     const { routerBasename } = this._appConfig;
-  //     const baseUri = `${protocol}//${host}${routerBasename}`;
-
-  //     const redirect_uri = firstOpenIdClient.redirect_uri || '/callback';
-  //     const silent_redirect_uri =
-  //       firstOpenIdClient.silent_redirect_uri || '/silent-refresh.html';
-  //     const post_logout_redirect_uri =
-  //       firstOpenIdClient.post_logout_redirect_uri || '/';
-
-  //     const openIdConnectConfiguration = Object.assign({}, firstOpenIdClient, {
-  //       redirect_uri: _makeAbsoluteIfNecessary(redirect_uri, baseUri),
-  //       silent_redirect_uri: _makeAbsoluteIfNecessary(
-  //         silent_redirect_uri,
-  //         baseUri
-  //       ),
-  //       post_logout_redirect_uri: _makeAbsoluteIfNecessary(
-  //         post_logout_redirect_uri,
-  //         baseUri
-  //       ),
-  //     });
-
-  //     this._userManager = getUserManagerForOpenIdConnectClient(
-  //       store,
-  //       openIdConnectConfiguration
-  //     );
-  //   }
-  // }
 }
 
 function sendSessionName() {
-  const guid =
-    Math.random()
-      .toString(36)
-      .substring(2, 15) +
-    Math.random()
-      .toString(36)
-      .substring(2, 15);
-  console.log('guid: ', guid);
+  const uid = guid();
+  console.log('guid: ', uid);
   var xhr = new XMLHttpRequest();
   var url = '/api/session/';
   xhr.open('POST', url, true);
@@ -250,12 +207,14 @@ function sendSessionName() {
       // var json = JSON.parse(xhr.responseText);
     }
   };
-  var data = JSON.stringify({ guid: guid });
+  var data = JSON.stringify({ guid: uid });
   xhr.send(data);
 }
 
 function _initServices(services) {
+  console.log('init services: ', services);
   servicesManager.registerServices(services);
+  console.log('registered: ', servicesManager);
 }
 
 /**
@@ -275,7 +234,7 @@ function _initExtensions(extensions, cornerstoneExtensionConfig, appConfig) {
   });
 
   const requiredExtensions = [
-    GenericViewerCommands, //??????????????????????????????????????????????????????????????????????
+    //GenericViewerCommands, //??????????????????????????????????????????????????????????????????????
     [OHIFCornerstoneExtension, cornerstoneExtensionConfig],
     /* WARNING: MUST BE REGISTERED _AFTER_ OHIFCornerstoneExtension */
     //MeasurementsPanel,
@@ -307,34 +266,11 @@ function _initHotkeys(appConfigHotkeys) {
   hotkeysManager.setDefaultHotKeys(appConfigHotkeys);
 }
 
-// function _initServers(servers) {
-//   if (servers) {
-//     utils.addServers(servers, store);
-//   }
-// }
-
-// function _isAbsoluteUrl(url) {
-//   return url.includes('http://') || url.includes('https://');
-// }
-
-// function _makeAbsoluteIfNecessary(url, base_url) {
-//   if (_isAbsoluteUrl(url)) {
-//     return url;
-//   }
-
-//   /*
-//    * Make sure base_url and url are not duplicating slashes.
-//    */
-//   if (base_url[base_url.length - 1] === '/') {
-//     base_url = base_url.slice(0, base_url.length - 1);
-//   }
-
-//   return base_url + url;
-// }
-
 /*
  * Only wrap/use hot if in dev.
  */
+
+console.log('itt a vége: ', servicesManager);
 const ExportedApp = process.env.NODE_ENV === 'development' ? hot(App) : App;
 
 export default ExportedApp;

@@ -33,50 +33,50 @@ const reload = () => window.location.reload();
 
 const ROUTES_DEF = {
   default: {
-    viewer: {
-      path: '/viewer/:studyInstanceUIDs',
-      component: ViewerRouting,
-    },
-    standaloneViewer: {
-      path: '/viewer',
-      component: StandaloneRouting,
-    },
-    list: {
-      path: ['/studylist', '/'],
-      component: StudyListRouting,
-      condition: appConfig => {
-        return appConfig.showStudyList;
-      },
-    },
+    // viewer: {
+    //   path: '/viewer/:studyInstanceUIDs',
+    //   component: ViewerRouting,
+    // },
+    // standaloneViewer: {
+    //   path: '/viewer',
+    //   component: StandaloneRouting,
+    // },
+    // list: {
+    //   path: ['/studylist', '/'],
+    //   component: StudyListRouting,
+    //   condition: appConfig => {
+    //     return appConfig.showStudyList;
+    //   },
+    // },
     local: {
       path: '/local',
       component: ViewerLocalFileData,
     },
-    IHEInvokeImageDisplay: {
-      path: '/IHEInvokeImageDisplay',
-      component: IHEInvokeImageDisplay
-    },
+    // IHEInvokeImageDisplay: {
+    //   path: '/IHEInvokeImageDisplay',
+    //   component: IHEInvokeImageDisplay,
+    // },
   },
-  gcloud: {
-    viewer: {
-      path:
-        '/projects/:project/locations/:location/datasets/:dataset/dicomStores/:dicomStore/study/:studyInstanceUIDs',
-      component: ViewerRouting,
-      condition: appConfig => {
-        return !!appConfig.enableGoogleCloudAdapter;
-      },
-    },
-    list: {
-      path:
-        '/projects/:project/locations/:location/datasets/:dataset/dicomStores/:dicomStore',
-      component: StudyListRouting,
-      condition: appConfig => {
-        const showList = appConfig.showStudyList;
+  // gcloud: {
+  //   viewer: {
+  //     path:
+  //       '/projects/:project/locations/:location/datasets/:dataset/dicomStores/:dicomStore/study/:studyInstanceUIDs',
+  //     component: ViewerRouting,
+  //     condition: appConfig => {
+  //       return !!appConfig.enableGoogleCloudAdapter;
+  //     },
+  //   },
+  //   list: {
+  //     path:
+  //       '/projects/:project/locations/:location/datasets/:dataset/dicomStores/:dicomStore',
+  //     component: StudyListRouting,
+  //     condition: appConfig => {
+  //       const showList = appConfig.showStudyList;
 
-        return showList && !!appConfig.enableGoogleCloudAdapter;
-      },
-    },
-  },
+  //       return showList && !!appConfig.enableGoogleCloudAdapter;
+  //     },
+  //   },
+  // },
 };
 
 const getRoutes = appConfig => {
@@ -116,18 +116,18 @@ const parsePath = (path, server, params) => {
 
 const parseViewerPath = (appConfig = {}, server = {}, params) => {
   let viewerPath = ROUTES_DEF.default.viewer.path;
-  if (appConfig.enableGoogleCloudAdapter) {
-    viewerPath = ROUTES_DEF.gcloud.viewer.path;
-  }
+  // if (appConfig.enableGoogleCloudAdapter) {
+  //   viewerPath = ROUTES_DEF.gcloud.viewer.path;
+  // }
 
   return parsePath(viewerPath, server, params);
 };
 
 const parseStudyListPath = (appConfig = {}, server = {}, params) => {
   let studyListPath = ROUTES_DEF.default.list.path;
-  if (appConfig.enableGoogleCloudAdapter) {
-    studyListPath = ROUTES_DEF.gcloud.list.path || studyListPath;
-  }
+  // if (appConfig.enableGoogleCloudAdapter) {
+  //   studyListPath = ROUTES_DEF.gcloud.list.path || studyListPath;
+  // }
 
   return parsePath(studyListPath, server, params);
 };

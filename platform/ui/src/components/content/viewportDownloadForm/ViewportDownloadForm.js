@@ -13,7 +13,7 @@ const ViewportDownloadForm = ({
   const [t] = useTranslation('ViewportDownloadForm');
 
   const downloadImage = () => {
-    console.log('studies from vp dl form:', studies);
+    // console.log('studies from vp dl form:', studies);
     downloadBlob(studies);
   };
 

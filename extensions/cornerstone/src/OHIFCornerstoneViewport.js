@@ -27,7 +27,7 @@ class OHIFCornerstoneViewport extends Component {
   static id = 'OHIFCornerstoneViewport';
 
   static init() {
-    console.log('OHIFCornerstoneViewport init()');
+    // console.log('OHIFCornerstoneViewport init()');
   }
 
   static destroy() {
@@ -174,7 +174,7 @@ class OHIFCornerstoneViewport extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('OHIFCornerstoneViewport didupdate');
+    // console.log('OHIFCornerstoneViewport didupdate');
     const { displaySet } = this.props.viewportData;
     const prevDisplaySet = prevProps.viewportData.displaySet;
 
@@ -220,7 +220,7 @@ class OHIFCornerstoneViewport extends Component {
       const { displaySet } = this.props.viewportData;
       const { StudyInstanceUID } = displaySet;
 
-      console.log('new image handler');
+      // console.log('new image handler');
       if (currentImageIdIndex > 0) {
         this.props.onNewImage({
           StudyInstanceUID,

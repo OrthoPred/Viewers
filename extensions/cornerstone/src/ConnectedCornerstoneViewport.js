@@ -22,7 +22,7 @@ const { setViewportActive, setViewportSpecificData } = OHIF.redux.actions;
 // };
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('connectedcornerstoneviewport mapstatetoprops');
+  // console.log('connectedcornerstoneviewport mapstatetoprops');
   let dataFromStore;
 
   // TODO: This may not be updated anymore :thinking:
@@ -63,7 +63,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  console.log('connectedcornerstoneviewport mapdispatch');
+  // console.log('connectedcornerstoneviewport mapdispatch');
   const { viewportIndex } = ownProps;
 
   return {

@@ -3,14 +3,14 @@ import DICOMWeb from './../../DICOMWeb';
 import ImageSet from './../ImageSet';
 import { InstanceMetadata } from './InstanceMetadata';
 import { Metadata } from './Metadata';
-import OHIFError from '../OHIFError';
+// import OHIFError from '../OHIFError';
 import { SeriesMetadata } from './SeriesMetadata';
 // - createStacks
 import { api } from 'dicomweb-client';
 // - createStacks
 import { isImage } from '../../utils/isImage';
-import isDisplaySetReconstructable from '../../utils/isDisplaySetReconstructable';
-import isLowPriorityModality from '../../utils/isLowPriorityModality';
+// import isDisplaySetReconstructable from '../../utils/isDisplaySetReconstructable';
+// import isLowPriorityModality from '../../utils/isLowPriorityModality';
 import errorHandler from '../../errorHandler';
 
 export class StudyMetadata extends Metadata {
@@ -553,41 +553,41 @@ export class StudyMetadata extends Metadata {
    *     Study data provided by backend does not sort series at all and client-side
    *     needs series sorted by the same criteria used for sorting display sets.
    */
-  sortSeriesByDisplaySets() {
-    // Object for mapping display sets' index by SeriesInstanceUID
-    const displaySetsMapping = {};
+  // sortSeriesByDisplaySets() {
+  //   // Object for mapping display sets' index by SeriesInstanceUID
+  //   const displaySetsMapping = {};
 
-    // Loop through each display set to create the mapping
-    this.forEachDisplaySet((displaySet, index) => {
-      if (!(displaySet instanceof ImageSet)) {
-        throw new OHIFError(
-          `StudyMetadata::sortSeriesByDisplaySets display set at index ${index} is not an instance of ImageSet`
-        );
-      }
+  //   // Loop through each display set to create the mapping
+  //   this.forEachDisplaySet((displaySet, index) => {
+  //     if (!(displaySet instanceof ImageSet)) {
+  //       throw new OHIFError(
+  //         `StudyMetadata::sortSeriesByDisplaySets display set at index ${index} is not an instance of ImageSet`
+  //       );
+  //     }
 
-      // In case of multiframe studies, just get the first index occurence
-      if (displaySetsMapping[displaySet.SeriesInstanceUID] === void 0) {
-        displaySetsMapping[displaySet.SeriesInstanceUID] = index;
-      }
-    });
+  //     // In case of multiframe studies, just get the first index occurence
+  //     if (displaySetsMapping[displaySet.SeriesInstanceUID] === void 0) {
+  //       displaySetsMapping[displaySet.SeriesInstanceUID] = index;
+  //     }
+  //   });
 
-    // Clone of actual series
-    const actualSeries = this.getSeries();
+  //   // Clone of actual series
+  //   const actualSeries = this.getSeries();
 
-    actualSeries.forEach((series, index) => {
-      if (!(series instanceof SeriesMetadata)) {
-        throw new OHIFError(
-          `StudyMetadata::sortSeriesByDisplaySets series at index ${index} is not an instance of SeriesMetadata`
-        );
-      }
+  //   actualSeries.forEach((series, index) => {
+  //     if (!(series instanceof SeriesMetadata)) {
+  //       throw new OHIFError(
+  //         `StudyMetadata::sortSeriesByDisplaySets series at index ${index} is not an instance of SeriesMetadata`
+  //       );
+  //     }
 
-      // Get the new series index
-      const seriesIndex = displaySetsMapping[series.getSeriesInstanceUID()];
+  //     // Get the new series index
+  //     const seriesIndex = displaySetsMapping[series.getSeriesInstanceUID()];
 
-      // Update the series object with the new series position
-      this._series[seriesIndex] = series;
-    });
-  }
+  //     // Update the series object with the new series position
+  //     this._series[seriesIndex] = series;
+  //   });
+  // }
 
   /**
    * Compares the current study instance with another one.
@@ -624,17 +624,17 @@ export class StudyMetadata extends Metadata {
    * Get the first image id given display instance uid.
    * @return {string} The image id.
    */
-  getFirstImageId(displaySetInstanceUID) {
-    try {
-      const displaySet = this.findDisplaySet(
-        displaySet => displaySet.displaySetInstanceUID === displaySetInstanceUID
-      );
-      return displaySet.images[0].getImageId();
-    } catch (error) {
-      console.error('Failed to retrieve image metadata');
-      return null;
-    }
-  }
+  // getFirstImageId(displaySetInstanceUID) {
+  //   try {
+  //     const displaySet = this.findDisplaySet(
+  //       displaySet => displaySet.displaySetInstanceUID === displaySetInstanceUID
+  //     );
+  //     return displaySet.images[0].getImageId();
+  //   } catch (error) {
+  //     console.error('Failed to retrieve image metadata');
+  //     return null;
+  //   }
+  // }
 
   /**
    * Get the first instance of the current study retaining a consistent result across multiple calls.
@@ -757,17 +757,21 @@ const makeDisplaySet = (series, instances) => {
     isMultiFrame: isMultiFrame(instance),
   });
 
-  // Sort the images in this series if needed
-  const shallSort = true; //!OHIF.utils.ObjectPath.get(Meteor, 'settings.public.ui.sortSeriesByIncomingOrder');
-  if (shallSort) {
-    imageSet.sortBy((a, b) => {
-      // Sort by InstanceNumber (0020,0013)
-      return (
-        (parseInt(a.getTagValue('InstanceNumber', 0)) || 0) -
-        (parseInt(b.getTagValue('InstanceNumber', 0)) || 0)
-      );
-    });
+  // console.log('imageSet for sort: ', imageSet);
+
+  if (instances.length && instances.length > 1) {
+    imageSet.sortByImagePositionPatient();
+    // console.log('sorting ...');
   }
+  // console.log('sorted images: ', imageSet);
+
+  // imageSet.sortBy((a, b) => {
+  //   // Sort by InstanceNumber (0020,0013)
+  //   return (
+  //     (parseInt(a.getTagValue('InstanceNumber', 0)) || 0) -
+  //     (parseInt(b.getTagValue('InstanceNumber', 0)) || 0)
+  //   );
+  // });
 
   // Include the first image instance number (after sorted)
   imageSet.setAttribute(
@@ -775,19 +779,15 @@ const makeDisplaySet = (series, instances) => {
     imageSet.getImage(0).getTagValue('InstanceNumber')
   );
 
-  const isReconstructable = isDisplaySetReconstructable(instances);
+  // const isReconstructable = isDisplaySetReconstructable(instances);
 
-  imageSet.isReconstructable = isReconstructable.value;
+  // imageSet.isReconstructable = isReconstructable.value;
 
-  if (shallSort && imageSet.isReconstructable) {
-    imageSet.sortByImagePositionPatient();
-  }
-
-  if (isReconstructable.missingFrames) {
-    // TODO -> This is currently unused, but may be used for reconstructing
-    // Volumes with gaps later on.
-    imageSet.missingFrames = isReconstructable.missingFrames;
-  }
+  // if (isReconstructable.missingFrames) {
+  //   // TODO -> This is currently unused, but may be used for reconstructing
+  //   // Volumes with gaps later on.
+  //   imageSet.missingFrames = isReconstructable.missingFrames;
+  // }
 
   return imageSet;
 };
@@ -882,34 +882,34 @@ function _getDisplaySetFromSopClassModule(
  * @param {*} b - DisplaySet
  */
 
-function seriesSortingCriteria(a, b) {
-  const isLowPriorityA = isLowPriorityModality(a.Modality);
-  const isLowPriorityB = isLowPriorityModality(b.Modality);
-  if (!isLowPriorityA && isLowPriorityB) {
-    return -1;
-  }
-  if (isLowPriorityA && !isLowPriorityB) {
-    return 1;
-  }
-  return sortBySeriesNumber(a, b);
-}
+// function seriesSortingCriteria(a, b) {
+//   const isLowPriorityA = isLowPriorityModality(a.Modality);
+//   const isLowPriorityB = isLowPriorityModality(b.Modality);
+//   if (!isLowPriorityA && isLowPriorityB) {
+//     return -1;
+//   }
+//   if (isLowPriorityA && !isLowPriorityB) {
+//     return 1;
+//   }
+//   return sortBySeriesNumber(a, b);
+// }
 
-/**
- * Sort series by series number. Series with low
- * @param {*} a - DisplaySet
- * @param {*} b - DisplaySet
- */
-function sortBySeriesNumber(a, b) {
-  const seriesNumberAIsGreaterOrUndefined =
-    a.SeriesNumber > b.SeriesNumber || (!a.SeriesNumber && b.SeriesNumber);
+// /**
+//  * Sort series by series number. Series with low
+//  * @param {*} a - DisplaySet
+//  * @param {*} b - DisplaySet
+//  */
+// function sortBySeriesNumber(a, b) {
+//   const seriesNumberAIsGreaterOrUndefined =
+//     a.SeriesNumber > b.SeriesNumber || (!a.SeriesNumber && b.SeriesNumber);
 
-  return seriesNumberAIsGreaterOrUndefined ? 1 : -1;
-}
+//   return seriesNumberAIsGreaterOrUndefined ? 1 : -1;
+// }
 
 /**
  * Sorts a list of display set objects
  * @param {Array} list A list of display sets to be sorted
  */
 function sortDisplaySetList(list) {
-  return list.sort(seriesSortingCriteria);
+  return list.sort(); //seriesSortingCriteria);
 }
