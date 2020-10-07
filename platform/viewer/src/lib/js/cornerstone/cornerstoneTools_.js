@@ -17,7 +17,8 @@
     /******/ var parentHotUpdateCallback = window['webpackHotUpdate'];
     /******/ window[
       'webpackHotUpdate'
-    ] = /******/ function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-next-line no-unused-vars
+    ] = /******/ function webpackHotUpdateCallback(chunkId, moreModules) {
+      // eslint-disable-next-line no-unused-vars
       /******/ hotAddUpdateChunk(chunkId, moreModules);
       /******/ if (parentHotUpdateCallback)
         parentHotUpdateCallback(chunkId, moreModules);
@@ -4504,7 +4505,7 @@
           )('segmentation');
 
           var onImageRendered = function onImageRendered(evt) {
-            console.log('onImageRendered');
+            // console.log('onImageRendered');
             var eventData = evt.detail;
             var element = eventData.element; // Render Annotation Tools
 

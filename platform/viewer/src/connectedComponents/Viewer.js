@@ -117,6 +117,7 @@ class Viewer extends Component {
     // console.log('componentDidUpdate');
 
     const { studies, isStudyLoaded } = this.props;
+    // console.log('Viewer_ studies', studies);
     if (studies !== prevProps.studies) {
       this.setState({
         thumbnails: _mapStudiesToThumbnails(studies),
@@ -251,28 +252,3 @@ const _mapStudiesToThumbnails = function(studies) {
     };
   });
 };
-
-// const ez = () => {
-//   return (
-//     <div>
-//       <div className="ViewportDownloadForm">
-//         <div className="actions">
-//           <div className="action-cancel">
-//             <button
-//               type="button"
-//               data-cy="cancel-btn"
-//               className="btn btn-danger"
-//             >
-//               {'Cancel'}
-//             </button>
-//           </div>
-//           <div className="action-save">
-//             <button className="btn btn-primary" data-cy="download-btn">
-//               {'Upload'}
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };

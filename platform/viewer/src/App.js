@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import PropTypes from 'prop-types'; //Runtime type checking for React props and similar objects.
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import OHIFCornerstoneExtension from '@ohif/extension-cornerstone';
 import { DndProvider } from 'react-dnd';
@@ -28,40 +27,13 @@ import {
   UINotificationService,
   UIModalService,
   UIDialogService,
-  //utils,
-  // redux as reduxOHIF,
 } from '@ohif/core';
 
 import { initWebWorkers } from './utils/index.js';
-
-// import { GenericViewerCommands } from './appExtensions';
 import ViewerLocalFileData from './connectedComponents/ViewerLocalFileData';
-
-/** Store */
 import { getActiveContexts } from './store/layout/selectors.js';
 import store from './store';
-
-/** Contexts */
 import { AppProvider, useAppContext, CONTEXTS } from './context/AppContext';
-
-import DrawBBoxTool from './DrawBBoxTool';
-// import { import as csTools, toolColors } from 'cornerstone-tools';
-
-import cornerstone from 'cornerstone-core';
-// import cornerstoneMath from 'cornerstone-math';
-import cornerstoneTools from 'cornerstone-tools';
-// import Hammer from 'hammerjs';
-
-cornerstoneTools.external.cornerstone = cornerstone;
-// cornerstoneTools.external.Hammer = Hammer;
-// cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
-
-cornerstoneTools.init();
-
-// ...
-
-cornerstoneTools.addTool(DrawBBoxTool);
-cornerstoneTools.setToolEnabled('DrawBBox');
 
 /** ~~~~~~~~~~~~~ Application Setup */
 const commandsManagerConfig = {
@@ -72,7 +44,7 @@ const commandsManagerConfig = {
 /** Managers */
 const commandsManager = new CommandsManager(commandsManagerConfig);
 const servicesManager = new ServicesManager();
-console.log('const  sevicemanager ');
+// console.log('const  sevicemanager ');
 const hotkeysManager = new HotkeysManager(commandsManager, servicesManager);
 let extensionManager;
 /** ~~~~~~~~~~~~~ End Application Setup */
@@ -80,20 +52,19 @@ let extensionManager;
 // TODO[react] Use a provider when the whole tree is React
 window.store = store;
 
-window.ohif = window.ohif || {};
-window.ohif.app = {
-  commandsManager,
-  hotkeysManager,
-  servicesManager,
-  extensionManager,
-};
+// window.ohif = window.ohif || {};
+// window.ohif.app = {
+//   commandsManager,
+//   hotkeysManager,
+//   servicesManager,
+//   extensionManager,
+// };
 
 class App extends Component {
   static propTypes = {
     config: PropTypes.oneOfType([
       PropTypes.func,
       PropTypes.shape({
-        routerBasename: PropTypes.string.isRequired,
         oidc: PropTypes.array,
         extensions: PropTypes.array,
       }),
@@ -110,8 +81,6 @@ class App extends Component {
     defaultExtensions: [],
   };
 
-  _appConfig;
-
   constructor(props) {
     super(props);
 
@@ -121,7 +90,6 @@ class App extends Component {
       showStudyList: false,
       cornerstoneExtensionConfig: {},
       extensions: [],
-      routerBasename: '/',
     };
 
     this._appConfig = {
@@ -138,12 +106,7 @@ class App extends Component {
     sendSessionName();
     setConfiguration(this._appConfig);
 
-    _initServices([
-      UINotificationService,
-      UIModalService,
-      UIDialogService,
-      //MeasurementService,
-    ]);
+    _initServices([UINotificationService, UIModalService, UIDialogService]);
     _initExtensions(
       [...defaultExtensions, ...extensions],
       cornerstoneExtensionConfig,
@@ -159,12 +122,10 @@ class App extends Component {
   }
 
   render() {
-    const { routerBasename } = this._appConfig;
     const {
       UINotificationService,
       UIDialogService,
       UIModalService,
-      //MeasurementService,
     } = servicesManager.services;
 
     return (
@@ -174,19 +135,17 @@ class App extends Component {
             <I18nextProvider i18n={i18n}>
               {' '}
               {/*I18next is an internationalization-framework */}
-              <Router basename={routerBasename}>
-                <SnackbarProvider service={UINotificationService}>
-                  <DialogProvider service={UIDialogService}>
-                    <ModalProvider modal={OHIFModal} service={UIModalService}>
-                      {' '}
-                      {/* toolbarhoz kell !!! */}
-                      <DndProvider backend={HTML5Backend}>
-                        <ViewerLocalFileData />
-                      </DndProvider>
-                    </ModalProvider>
-                  </DialogProvider>
-                </SnackbarProvider>
-              </Router>
+              <SnackbarProvider service={UINotificationService}>
+                <DialogProvider service={UIDialogService}>
+                  <ModalProvider modal={OHIFModal} service={UIModalService}>
+                    {' '}
+                    {/* toolbarhoz kell !!! */}
+                    <DndProvider backend={HTML5Backend}>
+                      <ViewerLocalFileData />
+                    </DndProvider>
+                  </ModalProvider>
+                </DialogProvider>
+              </SnackbarProvider>
             </I18nextProvider>
           </AppProvider>
         </Provider>
@@ -212,14 +171,11 @@ function sendSessionName() {
 }
 
 function _initServices(services) {
-  console.log('init services: ', services);
+  // console.log('init services: ', services);
   servicesManager.registerServices(services);
-  console.log('registered: ', servicesManager);
+  // console.log('registered: ', servicesManager);
 }
 
-/**
- * @param
- */
 function _initExtensions(extensions, cornerstoneExtensionConfig, appConfig) {
   extensionManager = new ExtensionManager({
     commandsManager,
@@ -234,13 +190,9 @@ function _initExtensions(extensions, cornerstoneExtensionConfig, appConfig) {
   });
 
   const requiredExtensions = [
-    //GenericViewerCommands, //??????????????????????????????????????????????????????????????????????
     [OHIFCornerstoneExtension, cornerstoneExtensionConfig],
-    /* WARNING: MUST BE REGISTERED _AFTER_ OHIFCornerstoneExtension */
-    //MeasurementsPanel,
   ];
-  // const mergedExtensions = requiredExtensions.concat(extensions);
-  extensionManager.registerExtensions(requiredExtensions); //mergedExtensions); !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  extensionManager.registerExtensions(requiredExtensions);
 }
 
 /**
@@ -248,13 +200,10 @@ function _initExtensions(extensions, cornerstoneExtensionConfig, appConfig) {
  * @param {Object} appConfigHotkeys - Default hotkeys, as defined by app config
  */
 function _initHotkeys(appConfigHotkeys) {
-  // TODO: Use something more resilient
-  // TODO: Mozilla has a special library for this
   const userPreferredHotkeys = JSON.parse(
     localStorage.getItem('hotkey-definitions') || '{}'
   );
 
-  // TODO: hotkeysManager.isValidDefinitionObject(/* */)
   const hasUserPreferences =
     userPreferredHotkeys && Object.keys(userPreferredHotkeys).length > 0;
   if (hasUserPreferences) {

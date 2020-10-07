@@ -26,33 +26,6 @@ const commandsModule = ({ servicesManager }) => {
       // console.log('customcommand, ', viewport);
     },
 
-    // rotateViewport: ({ viewports, rotation }) => {
-    //   const enabledElement = getEnabledElement(viewports.activeViewportIndex);
-
-    //   if (enabledElement) {
-    //     let viewport = cornerstone.getViewport(enabledElement);
-    //     viewport.rotation += rotation;
-    //     cornerstone.setViewport(enabledElement, viewport);
-    //   }
-    // },
-    // flipViewportHorizontal: ({ viewports }) => {
-    //   const enabledElement = getEnabledElement(viewports.activeViewportIndex);
-
-    //   if (enabledElement) {
-    //     let viewport = cornerstone.getViewport(enabledElement);
-    //     viewport.hflip = !viewport.hflip;
-    //     cornerstone.setViewport(enabledElement, viewport);
-    //   }
-    // },
-    // flipViewportVertical: ({ viewports }) => {
-    //   const enabledElement = getEnabledElement(viewports.activeViewportIndex);
-
-    //   if (enabledElement) {
-    //     let viewport = cornerstone.getViewport(enabledElement);
-    //     viewport.vflip = !viewport.vflip;
-    //     cornerstone.setViewport(enabledElement, viewport);
-    //   }
-    // },
     scaleViewport: ({ direction, viewports }) => {
       const enabledElement = getEnabledElement(viewports.activeViewportIndex);
       const step = direction * 0.15;
@@ -74,17 +47,7 @@ const commandsModule = ({ servicesManager }) => {
         cornerstone.reset(enabledElement);
       }
     },
-    // invertViewport: ({ viewports }) => {
-    //   const enabledElement = getEnabledElement(viewports.activeViewportIndex);
 
-    //   if (enabledElement) {
-    //     let viewport = cornerstone.getViewport(enabledElement);
-    //     viewport.invert = !viewport.invert;
-    //     cornerstone.setViewport(enabledElement, viewport);
-    //   }
-    // },
-    // TODO: this is receiving `evt` from `ToolbarRow`. We could use it to have
-    //       better mouseButtonMask sets.
     setToolActive: ({ toolName }) => {
       if (!toolName) {
         console.warn('No toolname provided to setToolActive command');
@@ -111,41 +74,6 @@ const commandsModule = ({ servicesManager }) => {
       ) {
         return;
       }
-
-      // const imageIdToolState = toolState[enabledElement.image.imageId];
-
-      // const measurementsToRemove = [];
-
-      // Object.keys(imageIdToolState).forEach(toolType => {
-      //   const { data } = imageIdToolState[toolType];
-
-      // data.forEach(measurementData => {
-      //   const {
-      //     _id,
-      //     lesionNamingNumber,
-      //     measurementNumber,
-      //   } = measurementData;
-      //   if (!_id) {
-      //     return;
-      //   }
-
-      //   measurementsToRemove.push({
-      //     toolType,
-      //     _id,
-      //     lesionNamingNumber,
-      //     measurementNumber,
-      //   });
-      // });
-      // });
-
-      // measurementsToRemove.forEach(measurementData => {
-      //   OHIF.measurements.MeasurementHandlers.onRemoved({
-      //     detail: {
-      //       toolType: measurementData.toolType,
-      //       measurementData,
-      //     },
-      //   });
-      // });
     },
     nextImage: ({ viewports }) => {
       const enabledElement = getEnabledElement(viewports.activeViewportIndex);
@@ -161,6 +89,7 @@ const commandsModule = ({ servicesManager }) => {
     },
     showDownloadViewportModal: ({ title, viewports, studies }) => {
       //download image
+      console.log('show viewport modal start');
       const activeViewportIndex = viewports.activeViewportIndex;
       const { UIModalService } = servicesManager.services;
       // console.log('studies from showmodal:', studies);
@@ -175,6 +104,7 @@ const commandsModule = ({ servicesManager }) => {
           },
         });
       }
+      console.log('show viewport modal end');
     },
 
     getNearbyToolData({ element, canvasCoordinates, availableToolTypes }) {
@@ -308,31 +238,7 @@ const commandsModule = ({ servicesManager }) => {
       storeContexts: ['viewports'],
       options: {},
     },
-    // rotateViewportCW: {
-    //   commandFn: actions.rotateViewport,
-    //   storeContexts: ['viewports'],
-    //   options: { rotation: 90 },
-    // },
-    // rotateViewportCCW: {
-    //   commandFn: actions.rotateViewport,
-    //   storeContexts: ['viewports'],
-    //   options: { rotation: -90 },
-    // },
-    // invertViewport: {
-    //   commandFn: actions.invertViewport,
-    //   storeContexts: ['viewports'],
-    //   options: {},
-    // },
-    // flipViewportVertical: {
-    //   commandFn: actions.flipViewportVertical,
-    //   storeContexts: ['viewports'],
-    //   options: {},
-    // },
-    // flipViewportHorizontal: {
-    //   commandFn: actions.flipViewportHorizontal,
-    //   storeContexts: ['viewports'],
-    //   options: {},
-    // },
+
     scaleUpViewport: {
       commandFn: actions.scaleViewport,
       storeContexts: ['viewports'],

@@ -14,7 +14,6 @@ import {
 import './ToolbarRow.css';
 import { commandsManager, extensionManager } from './../App.js';
 
-// import ConnectedCineDialog from './ConnectedCineDialog';
 import ConnectedLayoutButton from './ConnectedLayoutButton';
 import { withAppContext } from '../context/AppContext';
 
@@ -137,31 +136,11 @@ class ToolbarRow extends Component {
     }
 
     if (activeContextsChanged) {
-      this.setState(
-        {
-          toolbarButtons: _getVisibleToolbarButtons.call(this),
-        },
-        this.closeCineDialogIfNotApplicable
-      );
+      this.setState({
+        toolbarButtons: _getVisibleToolbarButtons.call(this),
+      });
     }
   }
-
-  closeCineDialogIfNotApplicable = () => {
-    const { dialog } = this.props;
-    let { dialogId, activeButtons, toolbarButtons } = this.state;
-    if (dialogId) {
-      const cineButtonPresent = toolbarButtons.find(
-        button => button.options && button.options.behavior === 'CINE'
-      );
-      if (!cineButtonPresent) {
-        dialog.dismiss({ id: dialogId });
-        activeButtons = activeButtons.filter(
-          button => button.options && button.options.behavior !== 'CINE'
-        );
-        this.setState({ dialogId: null, activeButtons });
-      }
-    }
-  };
 
   render() {
     const buttonComponents = _getButtonComponents.call(
@@ -345,36 +324,8 @@ function _getVisibleToolbarButtons() {
 function _handleBuiltIn(button) {
   /* TODO: Keep cine button active until its unselected. */
   const { dialog, t } = this.props;
-  const { dialogId } = this.state;
+  // const { dialogId } = this.state;
   const { id, options } = button;
-
-  // if (options.behavior === 'CINE') {
-  //   if (dialogId) {
-  //     dialog.dismiss({ id: dialogId });
-  //     this.setState(state => ({
-  //       dialogId: null,
-  //       activeButtons: [
-  //         ...state.activeButtons.filter(button => button.id !== id),
-  //       ],
-  //     }));
-  //   } else {
-  //     const spacing = 20;
-  //     const { x, y } = document
-  //       .querySelector(`.ViewerMain`)
-  //       .getBoundingClientRect();
-  //     const newDialogId = dialog.create({
-  //       content: ConnectedCineDialog,
-  //       defaultPosition: {
-  //         x: x + spacing || 0,
-  //         y: y + spacing || 0,
-  //       },
-  //     });
-  //     this.setState(state => ({
-  //       dialogId: newDialogId,
-  //       activeButtons: [...state.activeButtons, button],
-  //     }));
-  //   }
-  // }
 
   if (options.behavior === 'DOWNLOAD_SCREEN_SHOT') {
     console.log('download gomb studies:', this.props.studies); //******************************************** */
@@ -382,6 +333,7 @@ function _handleBuiltIn(button) {
       title: t('Upload deidentified images to the server'), //Download High Quality Image'),
       studies: this.props.studies,
     });
+    console.log('download gomb vége');
   }
 }
 

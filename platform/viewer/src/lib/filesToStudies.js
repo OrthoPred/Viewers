@@ -1,4 +1,5 @@
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
+// import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import dcmjs from 'dcmjs';
 import OHIF from '@ohif/core';
 
@@ -213,8 +214,11 @@ async function processFile(file) {
         const imageId = fileLoaderService.addFile(file);
         const image = await fileLoaderService.loadFile(file, imageId);
         const dataset = await fileLoaderService.getDataset(image, imageId);
+        // console.log('loaded image:', image);
         const studies = await fileLoaderService.getStudies(dataset, imageId);
+        // console.log('dataset:', dataset);
         // console.log('studies from processfile: ', studies);
+
         return studies;
       } catch (error) {
         console.log(

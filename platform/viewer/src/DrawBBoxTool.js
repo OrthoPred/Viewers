@@ -6,7 +6,7 @@ const BaseTool = csTools('base/BaseTool');
 const drawTextBox = csTools('drawing/drawTextBox');
 const getNewContext = csTools('drawing/getNewContext');
 
-console.log('bbox tool1');
+// console.log('bbox tool1');
 
 export default class DrawBBox extends BaseTool {
   constructor(configuration = {}) {
@@ -22,17 +22,17 @@ export default class DrawBBox extends BaseTool {
   }
 
   enabledCallback() {
-    console.log('bbox tool enabled ');
+    // console.log('bbox tool enabled ');
     this._forceImageUpdate();
   }
 
   disabledCallback() {
-    console.log('bbox tool disabled ');
+    // console.log('bbox tool disabled ');
     this._forceImageUpdate();
   }
 
   _forceImageUpdate() {
-    console.log('force bbox tool image update ');
+    // console.log('force bbox tool image update ');
     const enabledElement = cornerstone.getEnabledElement(this.element);
     const hasImageToUpdate = enabledElement.image;
 
@@ -52,11 +52,21 @@ export default class DrawBBox extends BaseTool {
     //   });
     // });
 
-    console.log('render bbox tool data');
+    // console.log('render bbox tool data');
+
     const eventData = evt.detail;
     var element = eventData.element;
     const { canvasContext, image } = eventData;
     const stats = image.stats;
+    // console.log('event data:', eventData);
+    // console.log('image:', image);
+
+    // var orthoFlowModule = cornerstone.metaData.get(
+    //   'orthoFlowModule',
+    //   image.imageId
+    // );
+    // console.log('orthoFlowModule', orthoFlowModule);
+    // console.log('rows:', imagePixelModule.rows);
 
     const textLines = [];
     const context = getNewContext(canvasContext.canvas);

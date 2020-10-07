@@ -1,5 +1,5 @@
 window.config = {
-  routerBasename: '/',
+  // routerBasename: '/',
   extensions: [],
   showStudyList: true,
   servers: {

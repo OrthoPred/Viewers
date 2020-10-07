@@ -31,7 +31,7 @@ class OHIFCornerstoneViewport extends Component {
   }
 
   static destroy() {
-    console.log('OHIFCornerstoneViewport destroy()');
+    // console.log('OHIFCornerstoneViewport destroy()');
     StackManager.clearStacks();
   }
 

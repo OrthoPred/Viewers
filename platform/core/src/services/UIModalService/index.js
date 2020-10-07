@@ -40,6 +40,7 @@ function _show({
   title = null,
   customClassName = null,
 }) {
+  // console.log('serviceimplementetion show', onClose, content);
   return serviceImplementation._show({
     content,
     contentProps,

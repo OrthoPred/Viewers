@@ -1,5 +1,5 @@
 const isImportant = tags => {
-  console.log(tags.ScanningSequence, tags.Modality);
+  // console.log(tags.ScanningSequence, tags.Modality);
   if (tags.Modality === 'MR' && tags.PixelData && tags.ScanningSequence) {
     if (
       tags.ScanningSequence.includes('SE') ||
@@ -9,7 +9,7 @@ const isImportant = tags => {
         !tags.ScanningSequence.includes('IR') &&
         !tags.ScanningSequence.includes('EP')
       ) {
-        console.log('important');
+        // console.log('important');
         return true;
       } else {
         console.log('EP or IR !!!!');

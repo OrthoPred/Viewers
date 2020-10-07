@@ -121,6 +121,7 @@ class MetadataProvider {
     }
 
     const { StudyInstanceUID, SeriesInstanceUID, SOPInstanceUID } = uids;
+    // console.log('SOPInstanceUID: ', SOPInstanceUID);
 
     return this._getInstanceData(
       StudyInstanceUID,
@@ -242,6 +243,7 @@ class MetadataProvider {
         };
         break;
       case WADO_IMAGE_LOADER_TAGS.IMAGE_PIXEL_MODULE:
+        // console.log('instance in img pixel module:', instance);
         metadata = {
           samplesPerPixel: instance.SamplesPerPixel,
           photometricInterpretation: instance.PhotometricInterpretation,
@@ -423,26 +425,38 @@ class MetadataProvider {
         };
 
         break;
+
+      case WADO_IMAGE_LOADER_TAGS.ORTHOFLOW_MODULE:
+        // console.log('metadata provider instance:', instance);
+        // console.log('metadata provider studies: ', this.studies);
+        metadata = {
+          bBoxes: instance.dBdt,
+        };
+        break;
     }
 
     return metadata;
   }
 
   _getInstanceData(StudyInstanceUID, SeriesInstanceUID, SOPInstanceUID) {
+    // console.log('studies: ', this.studies);
     const study = this.studies.get(StudyInstanceUID);
 
     if (!study) {
       return;
     }
-
+    // console.log('STUID:', StudyInstanceUID);
+    // console.log('study:', study);
     const series = study.series.get(SeriesInstanceUID);
 
     if (!series) {
       return;
     }
-
+    // console.log('serUID:', SeriesInstanceUID);
+    // console.log('series:', series);
     const instance = series.instances.get(SOPInstanceUID);
-
+    // console.log('SOPinstUID:', SOPInstanceUID);
+    // console.log('instance:', instance);
     return instance;
   }
 
@@ -493,6 +507,9 @@ const WADO_IMAGE_LOADER_TAGS = {
   GENERAL_IMAGE_MODULE: 'generalImageModule',
   GENERAL_STUDY_MODULE: 'generalStudyModule',
   CINE_MODULE: 'cineModule',
+
+  // OrthoFlow specific
+  ORTHOFLOW_MODULE: 'orthoFlowModule',
 };
 
 const INSTANCE = 'instance';

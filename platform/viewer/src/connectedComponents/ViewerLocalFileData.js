@@ -55,6 +55,7 @@ class ViewerLocalFileData extends Component {
       });
 
       studyMetadataManager.add(studyMetadata);
+      // console.log('returned updated: ', study);
       return study;
     });
 
@@ -65,12 +66,12 @@ class ViewerLocalFileData extends Component {
 
   render() {
     const onDrop = async acceptedFiles => {
-      console.log('accepted files before slice', acceptedFiles);
+      // console.log('accepted files before slice', acceptedFiles);
       if (acceptedFiles.length > 300) {
         acceptedFiles = acceptedFiles.slice(0, 300);
-        console.log('too many files added, only the first 300 will be used');
+        // console.log('too many files added, only the first 300 will be used');
       }
-      console.log('accepted files after slice', acceptedFiles);
+      // console.log('accepted files after slice', acceptedFiles);
       if (this.state.studies) {
         this.setState({ studies: null, error: null });
       }
@@ -78,6 +79,8 @@ class ViewerLocalFileData extends Component {
 
       cornerstoneWADOImageLoader.wadouri.fileManager.purge();
       const studies = await filesToStudies(acceptedFiles);
+      // cornerstoneWADOImageLoader.wadouri.fileManager.purge(); !!!! a képeket nem memóriából tölti vissza, a fájlmanagernek tartalmaznia kell a fájl listát, minden betöltés után történt változás elvész az újrabetöltés miatt!!!
+
       const updatedStudies = this.updateStudies(studies);
 
       if (!updatedStudies) {

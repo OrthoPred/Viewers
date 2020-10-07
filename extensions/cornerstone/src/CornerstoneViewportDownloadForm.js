@@ -53,13 +53,9 @@ var prgs = {};
 var zipProgress = 0;
 var uploadProgress = 0;
 
-const CornerstoneViewportDownloadForm = ({
-  onClose,
-  // activeViewportIndex,
-  studies,
-}) => {
+const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
   const downloadBlob = studies => {
-    console.log('before zipAll', studies);
+    console.log('before zipAll');
 
     zipAll(studies).then(
       function(output) {
@@ -67,6 +63,14 @@ const CornerstoneViewportDownloadForm = ({
         console.log('after zipAll, before sendreq');
         sendRequest(output).then(function() {
           onClose();
+          console.log('modal service vége');
+
+          let timerId = setInterval(() => console.log('hello'), 1000);
+
+          setTimeout(() => {
+            clearInterval(timerId);
+            console.log('stop');
+          }, 10000);
         });
         console.log('after sendreq');
       },
@@ -87,9 +91,9 @@ const CornerstoneViewportDownloadForm = ({
 
       const zip = new JSZip();
       studies.forEach(study => {
-        console.log('StudyInstanceUID:', study.StudyInstanceUID);
+        // console.log('StudyInstanceUID:', study.StudyInstanceUID);
         study.series.forEach(serie => {
-          console.log('\tSeriesInstanceUID:', serie.SeriesInstanceUID);
+          // console.log('\tSeriesInstanceUID:', serie.SeriesInstanceUID);
           serie.instances.forEach(instance => {
             if (isImportant(instance.metadata)) {
               REQUIRED_TAGS.forEach(tag => {
@@ -164,7 +168,7 @@ const CornerstoneViewportDownloadForm = ({
         const copy = prgs;
         copy[file.name] = { state: 'done', percentage: 100 };
         prgs = copy;
-        console.log('upload event load');
+        console.log('upload event listener load');
         resolve(req.response);
       });
 
@@ -172,7 +176,7 @@ const CornerstoneViewportDownloadForm = ({
         const copy = prgs;
         copy[file.name] = { state: 'error', percentage: 0 };
         prgs = copy;
-        console.log('upload event error');
+        console.log('upload event listener error');
         reject(req.response);
       });
 

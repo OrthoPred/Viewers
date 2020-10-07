@@ -35,42 +35,42 @@ const enums = {
 };
 
 const definitions = [
-  {
-    id: 'StackScroll',
-    label: 'Stack Scroll',
-    icon: 'bars',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'StackScroll' },
-  },
-  {
-    id: 'Zoom',
-    label: 'Zoom',
-    icon: 'search-plus',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'Zoom' },
-  },
-  {
-    id: 'Wwwc',
-    label: 'Levels',
-    icon: 'level',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'Wwwc' },
-  },
-  {
-    id: 'Pan',
-    label: 'Pan',
-    icon: 'arrows',
-    //
-    type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
-    commandName: 'setToolActive',
-    commandOptions: { toolName: 'Pan' },
-  },
+  // {
+  //   id: 'StackScroll',
+  //   label: 'Stack Scroll',
+  //   icon: 'bars',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'StackScroll' },
+  // },
+  // {
+  //   id: 'Zoom',
+  //   label: 'Zoom',
+  //   icon: 'search-plus',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'Zoom' },
+  // },
+  // {
+  //   id: 'Wwwc',
+  //   label: 'Levels',
+  //   icon: 'level',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'Wwwc' },
+  // },
+  // {
+  //   id: 'Pan',
+  //   label: 'Pan',
+  //   icon: 'arrows',
+  //   //
+  //   type: TOOLBAR_BUTTON_TYPES.SET_TOOL_ACTIVE,
+  //   commandName: 'setToolActive',
+  //   commandOptions: { toolName: 'Pan' },
+  // },
   // {
   //   id: 'Length',
   //   label: 'Length',
@@ -137,6 +137,7 @@ const definitions = [
       togglable: true,
     },
   },
+
   // {
   //   id: 'More',
   //   label: 'More',

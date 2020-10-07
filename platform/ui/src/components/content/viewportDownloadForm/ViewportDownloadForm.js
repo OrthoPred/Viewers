@@ -8,6 +8,7 @@ const ViewportDownloadForm = ({
   studies,
   onClose,
 
+  
   downloadBlob,
 }) => {
   const [t] = useTranslation('ViewportDownloadForm');

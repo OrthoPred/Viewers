@@ -4,6 +4,7 @@ import cornerstone from 'cornerstone-core';
 import csTools from 'cornerstone-tools';
 // import merge from 'lodash.merge';
 import initCornerstoneTools from './initCornerstoneTools.js';
+import DrawBBoxTool from '../../../platform/viewer/src/DrawBBoxTool';
 
 /**
  *
@@ -11,6 +12,9 @@ import initCornerstoneTools from './initCornerstoneTools.js';
  * @param {Object} configuration
  * @param {Object|Array} configuration.csToolsConfig
  */
+
+// console.log('init cornerstone  extension');
+
 export default function init({ servicesManager, configuration }) {
   const { UIDialogService } = servicesManager.services;
 
@@ -157,4 +161,7 @@ export default function init({ servicesManager, configuration }) {
   csTools.setToolActive('PanMultiTouch', { pointers: 2 }); // TODO: Better error if no options
   csTools.setToolActive('ZoomTouchPinch', {});
   csTools.setToolEnabled('Overlay', {});
+
+  csTools.addTool(DrawBBoxTool);
+  csTools.setToolEnabled('DrawBBox');
 }
