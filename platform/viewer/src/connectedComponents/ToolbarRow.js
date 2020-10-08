@@ -32,6 +32,7 @@ class ToolbarRow extends Component {
     // NOTE: withDialog, withModal HOCs
     dialog: PropTypes.any,
     modal: PropTypes.any,
+    text: PropTypes.string,
   };
 
   static defaultProps = {
@@ -56,6 +57,7 @@ class ToolbarRow extends Component {
     };
 
     this.seriesPerStudyCount = [];
+    // this.text = 'ez a szöveg';
 
     this._handleBuiltIn = _handleBuiltIn.bind(this);
 
@@ -159,17 +161,17 @@ class ToolbarRow extends Component {
       <>
         <div className="ToolbarRow">
           <div className="pull-left m-t-1 p-y-1" style={{ padding: '10px' }}>
-            {' '}
-            {/* 'Series' button */}
             <RoundedButtonGroup
               options={this.buttonGroups.left}
               value={this.props.selectedLeftSidePanel || ''}
               onValueChanged={onPressLeft}
             />
           </div>
-          {buttonComponents} {/* tool buttons */}
-          <ConnectedLayoutButton /> {/* layout chooser button*/}
-          {/* <div
+          {buttonComponents}
+          <ConnectedLayoutButton />
+          <h3> placeholder</h3>
+          <h3 style={{ color: 'blue' }}> {this.props.text}</h3>
+          <div
             className="pull-right m-t-1 rm-x-1"
             style={{ marginLeft: 'auto' }}
           >
@@ -180,7 +182,7 @@ class ToolbarRow extends Component {
                 onValueChanged={onPressRight}
               />
             )}
-          </div> */}
+          </div>
         </div>
       </>
     );
@@ -322,9 +324,7 @@ function _getVisibleToolbarButtons() {
 }
 
 function _handleBuiltIn(button) {
-  /* TODO: Keep cine button active until its unselected. */
   const { dialog, t } = this.props;
-  // const { dialogId } = this.state;
   const { id, options } = button;
 
   if (options.behavior === 'DOWNLOAD_SCREEN_SHOT') {

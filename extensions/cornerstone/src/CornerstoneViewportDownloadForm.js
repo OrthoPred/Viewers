@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import '../../../platform/viewer/src/progress/progress.css';
 import { useTranslation } from 'react-i18next';
 import isImportant from '@ohif/core/src/utils/isImportant';
+import setCornerstoneLayout from './utils/setCornerstoneLayout';
+// import { useDispatch } from 'react-redux';
 
 // import { servicesManager } from '../../../platform/viewer/src/App';
 // console.log('imported svc mgr in dlform, ', servicesManager);
@@ -53,8 +55,13 @@ var prgs = {};
 var zipProgress = 0;
 var uploadProgress = 0;
 
-const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
-  const downloadBlob = studies => {
+// const CornerstoneViewportDownloadForm = props => {
+function CornerstoneViewportDownloadForm(props) {
+  console.log('upload');
+  console.log(props.studies);
+  console.log(props.progressData, props.progressId);
+
+  const upload = studies => {
     console.log('before zipAll');
 
     zipAll(studies).then(
@@ -62,21 +69,25 @@ const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
         //accept
         console.log('after zipAll, before sendreq');
         sendRequest(output).then(function() {
-          onClose();
+          props.onClose();
           console.log('modal service vége');
-
-          let timerId = setInterval(() => console.log('hello'), 1000);
+          let progressData = 0;
+          let progressId = 0;
+          let timerId = setInterval(() => {
+            progressData += 20;
+            props.setInferenceProgress(progressId, progressData);
+          }, 1000);
 
           setTimeout(() => {
             clearInterval(timerId);
             console.log('stop');
-          }, 10000);
+          }, 20000);
         });
         console.log('after sendreq');
       },
       function() {
         console.log('reject in dl blob');
-        onClose();
+        props.onClose();
       }
     );
   };
@@ -90,7 +101,7 @@ const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
       var foundImportant = false;
 
       const zip = new JSZip();
-      studies.forEach(study => {
+      props.studies.forEach(study => {
         // console.log('StudyInstanceUID:', study.StudyInstanceUID);
         study.series.forEach(serie => {
           // console.log('\tSeriesInstanceUID:', serie.SeriesInstanceUID);
@@ -212,7 +223,7 @@ const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
               type="button"
               data-cy="cancel-btn"
               className="btn btn-danger"
-              onClick={onClose}
+              onClick={props.onClose}
             >
               {t('Buttons:Cancel')}
             </button>
@@ -220,7 +231,7 @@ const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
           <div className="action-save">
             <button
               // disabled={hasError}
-              onClick={downloadBlob}
+              onClick={upload}
               className="btn btn-primary"
               data-cy="download-btn"
             >
@@ -231,7 +242,7 @@ const CornerstoneViewportDownloadForm = ({ onClose, studies }) => {
       </div>
     </div>
   );
-};
+}
 
 CornerstoneViewportDownloadForm.propTypes = {
   onClose: PropTypes.func,

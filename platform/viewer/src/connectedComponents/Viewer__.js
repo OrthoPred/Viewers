@@ -2,25 +2,47 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import OHIF, { MODULE_TYPES } from '@ohif/core';
-import { withDialog } from '@ohif/ui';
-import moment from 'moment';
-// import ConnectedHeader from './ConnectedHeader.js';
-import ToolbarRow from './ToolbarRow.js';
-import ConnectedStudyBrowser from './ConnectedStudyBrowser.js';
-import ConnectedViewerMain from './ConnectedViewerMain.js';
-import SidePanel from './../components/SidePanel.js';
-import ErrorBoundaryDialog from './../components/ErrorBoundaryDialog';
-import { extensionManager } from './../App.js';
+import OHIF from '@ohif/core';
+import ViewerMain from './ViewerMain';
 import { connect } from 'react-redux';
 
-// Contexts
-// import WhiteLabelingContext from '../context/WhiteLabelingContext.js';
-// import UserManagerContext from '../context/UserManagerContext';
-// import AppContext from '../context/AppContext';
+const {
+  setViewportSpecificData,
+  clearViewportSpecificData,
+} = OHIF.redux.actions;
+
+const mapStateToProps = state => {
+  const { activeViewportIndex, layout, viewportSpecificData } = state.viewports;
+
+  return {
+    activeViewportIndex,
+    layout,
+    viewportSpecificData,
+    viewports: state.viewports,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setViewportSpecificData: (viewportIndex, data) => {
+      dispatch(setViewportSpecificData(viewportIndex, data)); //Redux
+    },
+    clearViewportSpecificData: () => {
+      dispatch(clearViewportSpecificData()); //Redux
+    },
+  };
+};
+
+const ViewerMain_ = connect(mapStateToProps, mapDispatchToProps)(ViewerMain);
+
+import { withDialog } from '@ohif/ui';
+import ToolbarRow from './ToolbarRow.js'; // toolbar, enélkül is működik
+import ConnectedStudyBrowser from './ConnectedStudyBrowser.js'; //kell, ez a sidepanel!!
+// import ConnectedViewerMain from './ConnectedViewerMain.js';
+import SidePanel from './../components/SidePanel.js';
+import ErrorBoundaryDialog from './../components/ErrorBoundaryDialog';
 
 import './Viewer.css';
-// import { finished } from 'stream';
 
 class Viewer extends Component {
   static propTypes = {
@@ -54,17 +76,12 @@ class Viewer extends Component {
     onTimepointsUpdated: PropTypes.func,
     onMeasurementsUpdated: PropTypes.func,
     // window.store.getState().viewports.viewportSpecificData
-    viewports: PropTypes.object.isRequired,
+    viewports: PropTypes.object, //.isRequired,
     // window.store.getState().viewports.activeViewportIndex
-    activeViewportIndex: PropTypes.number.isRequired,
+    activeViewportIndex: PropTypes.number, //.isRequired,
     isStudyLoaded: PropTypes.bool,
     dialog: PropTypes.object,
   };
-
-  constructor(props) {
-    super(props);
-    console.log('this.props: ', this.props);
-  }
 
   state = {
     isLeftSidePanelOpen: true,
@@ -80,112 +97,44 @@ class Viewer extends Component {
     }
   }
 
-  retrieveTimepoints = filter => {
-    OHIF.log.info('retrieveTimepoints');
-
-    // Get the earliest and latest study date
-    let earliestDate = new Date().toISOString();
-    let latestDate = new Date().toISOString();
-    if (this.props.studies) {
-      latestDate = new Date('1000-01-01').toISOString();
-      this.props.studies.forEach(study => {
-        const StudyDate = moment(study.StudyDate, 'YYYYMMDD').toISOString();
-        if (StudyDate < earliestDate) {
-          earliestDate = StudyDate;
-        }
-        if (StudyDate > latestDate) {
-          latestDate = StudyDate;
-        }
-      });
-    }
-
-    // Return a generic timepoint
-    return Promise.resolve([
-      {
-        timepointType: 'baseline',
-        timepointId: 'TimepointId',
-        studyInstanceUIDs: this.props.studyInstanceUIDs,
-        PatientID: filter.PatientID,
-        earliestDate,
-        latestDate,
-        isLocked: false,
-      },
-    ]);
-  };
-
   componentDidMount() {
+    this.text = 'text from wiever';
     const { studies, isStudyLoaded } = this.props;
-
     if (studies) {
-      // const PatientID = studies[0] && studies[0].PatientID;
-
       this.setState({
         thumbnails: _mapStudiesToThumbnails(studies),
       });
     }
+    // var dlg = this.props.dialog.create({
+    //   id: 'sff',
+    //   content: ez,
+    //   isDraggable: false,
+    //   centralize: true,
+    // });
+    // console.log('dialog created,', dlg);
   }
 
   componentDidUpdate(prevProps) {
+    // console.log('componentDidUpdate');
+
     const { studies, isStudyLoaded } = this.props;
-    console.log('props:**** ', this.props);
+    // console.log('Viewer_ studies', studies);
     if (studies !== prevProps.studies) {
       this.setState({
         thumbnails: _mapStudiesToThumbnails(studies),
       });
     }
+    if (isStudyLoaded && isStudyLoaded !== prevProps.isStudyLoaded) {
+      const PatientID = studies[0] && studies[0].PatientID;
+    }
   }
 
   render() {
-    let VisiblePanelLeft, VisiblePanelRight;
-    const panelExtensions = extensionManager.modules[MODULE_TYPES.PANEL];
-
-    panelExtensions.forEach(panelExt => {
-      panelExt.module.components.forEach(comp => {
-        if (comp.id === this.state.selectedRightSidePanel) {
-          VisiblePanelRight = comp.component;
-        } else if (comp.id === this.state.selectedLeftSidePanel) {
-          VisiblePanelLeft = comp.component;
-        }
-      });
-    });
-
     return (
       <>
-        {/* HEADER */}
-        {/* <WhiteLabelingContext.Consumer>
-          {whiteLabeling => (
-            <UserManagerContext.Consumer>
-              {userManager => (
-                <AppContext.Consumer>
-                  {appContext => (
-
-                    <ConnectedHeader
-                      linkText={
-                        appContext.appConfig.showStudyList
-                          ? 'Study List'
-                          : undefined
-                      }
-                      linkPath={
-                        appContext.appConfig.showStudyList ? '/' : undefined
-                      }
-                      userManager={userManager}
-                    >
-                      {whiteLabeling &&
-                        whiteLabeling.createLogoComponentFn &&
-                        whiteLabeling.createLogoComponentFn(React)}
-                    </ConnectedHeader>
-                  )}
-                </AppContext.Consumer>
-              )}
-            </UserManagerContext.Consumer>
-          )}
-        </WhiteLabelingContext.Consumer> */}
-
-        {/* TOOLBAR */}
         <ErrorBoundaryDialog context="ToolbarRow">
           <ToolbarRow
-            {...console.log(this.props.progressData)}
-            text={this.props.progressData}
+            text={this.text}
             isLeftSidePanelOpen={this.state.isLeftSidePanelOpen}
             isRightSidePanelOpen={this.state.isRightSidePanelOpen}
             selectedLeftSidePanel={
@@ -223,74 +172,42 @@ class Viewer extends Component {
           />
         </ErrorBoundaryDialog>
 
-        {/*<ConnectedStudyLoadingMonitor studies={this.props.studies} />*/}
-        {/*<StudyPrefetcher studies={this.props.studies} />*/}
-
         {/* VIEWPORTS + SIDEPANELS */}
         <div className="FlexboxLayout">
           {/* LEFT */}
           <ErrorBoundaryDialog context="LeftSidePanel">
             <SidePanel from="left" isOpen={this.state.isLeftSidePanelOpen}>
-              {VisiblePanelLeft ? (
-                <VisiblePanelLeft
-                  viewports={this.props.viewports}
-                  studies={this.props.studies}
-                  activeIndex={this.props.activeViewportIndex}
-                />
-              ) : (
-                <ConnectedStudyBrowser
-                  studies={this.state.thumbnails}
-                  studyMetadata={this.props.studies}
-                />
-              )}
+              <ConnectedStudyBrowser
+                studies={this.state.thumbnails}
+                studyMetadata={this.props.studies}
+              />
             </SidePanel>
           </ErrorBoundaryDialog>
 
           {/* MAIN */}
           <div className={classNames('main-content')}>
             <ErrorBoundaryDialog context="ViewerMain">
-              <ConnectedViewerMain
+              <ViewerMain_
                 studies={this.props.studies}
                 isStudyLoaded={this.props.isStudyLoaded}
               />
             </ErrorBoundaryDialog>
           </div>
-
-          {/* RIGHT */}
-          <ErrorBoundaryDialog context="RightSidePanel">
-            <SidePanel from="right" isOpen={this.state.isRightSidePanelOpen}>
-              {VisiblePanelRight && (
-                <VisiblePanelRight
-                  isOpen={this.state.isRightSidePanelOpen}
-                  viewports={this.props.viewports}
-                  studies={this.props.studies}
-                  activeIndex={this.props.activeViewportIndex}
-                />
-              )}
-            </SidePanel>
-          </ErrorBoundaryDialog>
         </div>
       </>
     );
   }
 }
 
-const mapStateToProps = state => {
-  console.log('state in viewer: ', state);
-  console.log(state.orthoFlow.progress, state.orthoFlow.lastUpdated);
-  return {
-    progressData: state.orthoFlow.progress,
-    progressId: state.orthoFlow.lastUpdated,
-  };
-};
-
-export default connect(mapStateToProps, null)(withDialog(Viewer));
+export default withDialog(Viewer);
+// export default Viewer;
 
 /**
  * What types are these? Why do we have "mapping" dropped in here instead of in
  * a mapping layer?
  *
  * TODO[react]:
+ * - Add sorting of display sets
  * - Add showStackLoadingProgressBar option
  *
  * @param {Study[]} studies
@@ -304,20 +221,15 @@ const _mapStudiesToThumbnails = function(studies) {
       const {
         displaySetInstanceUID,
         SeriesDescription,
+        SeriesNumber,
         InstanceNumber,
         numImageFrames,
-        SeriesNumber,
       } = displaySet;
 
       let imageId;
       let altImageText;
 
-      if (displaySet.Modality && displaySet.Modality === 'SEG') {
-        // TODO: We want to replace this with a thumbnail showing
-        // the segmentation map on the image, but this is easier
-        // and better than what we have right now.
-        altImageText = 'SEG';
-      } else if (displaySet.images && displaySet.images.length) {
+      if (displaySet.images && displaySet.images.length) {
         const imageIndex = Math.floor(displaySet.images.length / 2);
 
         imageId = displaySet.images[imageIndex].getImageId();
@@ -330,9 +242,9 @@ const _mapStudiesToThumbnails = function(studies) {
         altImageText,
         displaySetInstanceUID,
         SeriesDescription,
+        SeriesNumber,
         InstanceNumber,
         numImageFrames,
-        SeriesNumber,
       };
     });
 

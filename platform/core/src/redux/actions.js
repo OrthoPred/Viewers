@@ -79,6 +79,19 @@ export const setActiveViewportSpecificData = viewportSpecificData => ({
 /**
  * NOT-VIEWPORT
  */
+
+export const setInferenceProgress = (progressId, progressData) => ({
+  type: 'SET_INFERENCE_PROGRESS',
+  progressId,
+  progressData,
+});
+
+export const clearInferenceProgress = (progressId, progressData) => ({
+  type: 'CLEAR_INFERENCE_PROGRESS',
+  progressId,
+  progressData,
+});
+
 export const setStudyLoadingProgress = (progressId, progressData) => ({
   type: 'SET_STUDY_LOADING_PROGRESS',
   progressId,
@@ -143,6 +156,8 @@ const actions = {
   setMeasurements,
   setStudyData,
   setServers,
+  setInferenceProgress,
+  clearInferenceProgress,
 };
 
 export default actions;

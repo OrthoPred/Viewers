@@ -5,6 +5,7 @@ import servers from './servers';
 import studies from './studies';
 import timepointManager from './timepointManager';
 import viewports from './viewports';
+import orthoFlow from './orthoFlow';
 
 const reducers = {
   extensions,
@@ -14,6 +15,7 @@ const reducers = {
   studies,
   timepointManager,
   viewports,
+  orthoFlow,
 };
 
 export default reducers;

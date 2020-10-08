@@ -2,7 +2,7 @@ import React from 'react';
 import init from './init.js';
 import commandsModule from './commandsModule.js';
 import toolbarModule from './toolbarModule.js';
-import CornerstoneViewportDownloadForm from './CornerstoneViewportDownloadForm';
+import ConnectedCornerstoneViewportDownloadForm from './ConnectedCornerstoneViewportDownloadForm';
 
 const Component = React.lazy(() => {
   return import('./OHIFCornerstoneViewport');
@@ -56,4 +56,4 @@ export default {
   },
 };
 
-export { CornerstoneViewportDownloadForm };
+export { ConnectedCornerstoneViewportDownloadForm };

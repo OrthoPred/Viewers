@@ -4,7 +4,7 @@ import OHIF from '@ohif/core';
 
 import setCornerstoneLayout from './utils/setCornerstoneLayout.js';
 import { getEnabledElement } from './state';
-import CornerstoneViewportDownloadForm from './CornerstoneViewportDownloadForm';
+import ConnectedCornerstoneViewportDownloadForm from './ConnectedCornerstoneViewportDownloadForm';
 const scroll = cornerstoneTools.import('util/scroll');
 
 const { studyMetadataManager } = OHIF.utils;
@@ -95,7 +95,7 @@ const commandsModule = ({ servicesManager }) => {
       // console.log('studies from showmodal:', studies);
       if (UIModalService) {
         UIModalService.show({
-          content: CornerstoneViewportDownloadForm,
+          content: ConnectedCornerstoneViewportDownloadForm,
           title,
           contentProps: {
             activeViewportIndex,
@@ -187,7 +187,7 @@ const commandsModule = ({ servicesManager }) => {
       activeViewportIndex,
     }) => {
       const study = studyMetadataManager.get(StudyInstanceUID);
-
+      console.log('jump to image', study);
       const displaySet = study.findDisplaySet(ds => {
         return (
           ds.images &&

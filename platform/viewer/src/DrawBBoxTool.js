@@ -42,22 +42,10 @@ export default class DrawBBox extends BaseTool {
   }
 
   renderToolData(evt) {
-    // var color = _stateManagement_toolColors_js__WEBPACK_IMPORTED_MODULE_11__["default"].getColorIfActive({
-    //   active: true
-    // });
-    // var context = Object(_drawing_index_j s__WEBPACK_IMPORTED_MODULE_8__["getNewContext"])(eventData.canvasContext.canvas);
-    // Object(_drawing_inde  x_js__WEBPACK_IMPORTED_MODULE_8__["draw"])(context, function (context) {
-    //   Object(_drawing_index_js__WE BPACK_IMPORTED_MODULE_8__["drawRect"])(context, element, _this2.handles.start, _this2.handles.end, {
-    //     color: color
-    //   });
-    // });
-
-    // console.log('render bbox tool data');
-
     const eventData = evt.detail;
     var element = eventData.element;
     const { canvasContext, image } = eventData;
-    const stats = image.stats;
+    // const stats = image.stats;
     // console.log('event data:', eventData);
     // console.log('image:', image);
 
@@ -68,17 +56,17 @@ export default class DrawBBox extends BaseTool {
     // console.log('orthoFlowModule', orthoFlowModule);
     // console.log('rows:', imagePixelModule.rows);
 
-    const textLines = [];
+    // const textLines = [];
     const context = getNewContext(canvasContext.canvas);
-    const color = toolColors.getToolColor();
+    // const color = toolColors.getToolColor();
 
-    Object.keys(stats).forEach(function(key) {
-      const text = `${key} : ${stats[key]}`;
+    // Object.keys(stats).forEach(function(key) {
+    //   const text = `${key} : ${stats[key]}`;
 
-      textLines.push(text);
-    });
+    //   textLines.push(text);
+    // });
 
-    drawTextBox(context, textLines, 0, 0, color);
+    // drawTextBox(context, textLines, 0, 0, color);
 
     drawRect(
       context,
