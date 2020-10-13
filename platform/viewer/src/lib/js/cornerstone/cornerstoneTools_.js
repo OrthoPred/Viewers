@@ -16729,6 +16729,7 @@
               _util_triggerEvent_js__WEBPACK_IMPORTED_MODULE_3__['default']
             )(element, eventType, eventData);
           }
+
           /**
            * Returns tool specific state of an element. Used by tools as well as modules
            * that save state persistently

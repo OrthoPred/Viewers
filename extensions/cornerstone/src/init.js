@@ -2,9 +2,10 @@ import OHIF from '@ohif/core';
 import { SimpleDialog } from '@ohif/ui';
 import cornerstone from 'cornerstone-core';
 import csTools from 'cornerstone-tools';
-// import merge from 'lodash.merge';
+import merge from 'lodash.merge';
 import initCornerstoneTools from './initCornerstoneTools.js';
 import DrawBBoxTool from '../../../platform/viewer/src/DrawBBoxTool';
+import RTStructDisplayTool from '../../dicom-rt/src/tools/RTStructDisplayTool';
 
 /**
  *
@@ -68,6 +69,7 @@ export default function init({ servicesManager, configuration }) {
       csTools.EllipticalRoiTool,
       csTools.DragProbeTool,
       csTools.RectangleRoiTool,
+      // csTools.DrawBBoxTool,
     ],
     other: [
       csTools.PanTool,
@@ -133,14 +135,14 @@ export default function init({ servicesManager, configuration }) {
   /* Add tools with its custom props through extension configuration. */
   tools.forEach(tool => {
     const toolName = tool.name.replace('Tool', '');
-    // const externalToolsConfig = configuration.tools || {};
-    // const externalToolProps = externalToolsConfig[toolName] || {};
+    const externalToolsConfig = configuration.tools || {};
+    const externalToolProps = externalToolsConfig[toolName] || {};
     const internalToolProps = internalToolsConfig[toolName] || {};
-    // const props = merge(
-    //   internalToolProps,
-    //   parseToolProps(externalToolProps, tool)
-    // );
-    // csTools.addTool(tool, props);
+    const props = merge(
+      internalToolProps,
+      parseToolProps(externalToolProps, tool)
+    );
+    csTools.addTool(tool, props);
     csTools.addTool(tool, internalToolProps);
   });
 
@@ -162,6 +164,10 @@ export default function init({ servicesManager, configuration }) {
   csTools.setToolActive('ZoomTouchPinch', {});
   csTools.setToolEnabled('Overlay', {});
 
+  csTools.addTool(RTStructDisplayTool);
+  csTools.setToolEnabled('RTStruct');
+
   csTools.addTool(DrawBBoxTool);
   csTools.setToolEnabled('DrawBBox');
+  console.log('tool store: ', csTools.store);
 }

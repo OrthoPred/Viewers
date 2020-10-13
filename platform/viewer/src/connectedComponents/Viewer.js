@@ -14,6 +14,8 @@ import ErrorBoundaryDialog from './../components/ErrorBoundaryDialog';
 import { extensionManager } from './../App.js';
 import { connect } from 'react-redux';
 
+import { addToolState } from 'cornerstone-tools';
+
 // Contexts
 // import WhiteLabelingContext from '../context/WhiteLabelingContext.js';
 // import UserManagerContext from '../context/UserManagerContext';

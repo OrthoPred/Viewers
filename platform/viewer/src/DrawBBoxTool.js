@@ -1,5 +1,5 @@
 import cornerstone from 'cornerstone-core';
-import { import as csTools, toolColors } from 'cornerstone-tools';
+import { import as csTools, getToolState } from 'cornerstone-tools';
 import drawRect from './drawRect.js';
 
 const BaseTool = csTools('base/BaseTool');
@@ -43,10 +43,18 @@ export default class DrawBBox extends BaseTool {
 
   renderToolData(evt) {
     const eventData = evt.detail;
+
+    console.log('rtstruct ev data: ', eventData);
+    const toolState = getToolState(evt.currentTarget, this.name);
+
+    console.log('drawbbox toolstate, ', toolState);
+    console.log('evt.tgt, ', evt.currentTarget);
+    console.log('toolstate, ', this.name);
+
     var element = eventData.element;
     const { canvasContext, image } = eventData;
     // const stats = image.stats;
-    // console.log('event data:', eventData);
+    console.log('event data:', eventData);
     // console.log('image:', image);
 
     // var orthoFlowModule = cornerstone.metaData.get(
@@ -84,7 +92,7 @@ export default class DrawBBox extends BaseTool {
         active: false,
       },
       {
-        color: 'rgb(255, 255, 0)',
+        color: 'rgb(255, 0, 0)',
       }
     );
     drawRect(

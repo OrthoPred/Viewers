@@ -116,6 +116,7 @@ function CornerstoneViewportDownloadForm(props) {
           poll();
         } else {
           console.log('polling finished');
+          loadBBoxData(output);
         }
       },
       function(error) {
@@ -123,6 +124,109 @@ function CornerstoneViewportDownloadForm(props) {
         props.onClose();
       }
     );
+  }
+
+  const globalImageIdSpecificToolStateManager =
+    cornerstoneTools.globalImageIdSpecificToolStateManager;
+  const toolState = globalImageIdSpecificToolStateManager.saveToolState();
+
+  function loadBBoxData(bbox_data) {
+    console.log('load bbox data, ', bbox_data);
+
+    for (const stuid in bbox_data.result) {
+      console.log(`stuid:${stuid}`);
+      for (const seruid in bbox_data.result[stuid]) {
+        console.log(`seruid:${seruid}`);
+        const imageIdSopInstanceUidPairs = _getImageIdSopInstanceUidPairsForDisplaySet(
+          props.studies,
+          stuid,
+          seruid
+        );
+        for (const siuid in bbox_data.result[stuid][seruid]) {
+          console.log(`siuid:${siuid}`);
+          const imageId = _getImageId(imageIdSopInstanceUidPairs, siuid);
+          console.log(siuid, imageId);
+          const imageIdSpecificToolData = _getOrCreateImageIdSpecificToolData(
+            toolState,
+            imageId,
+            'DrawBBox'
+          );
+          console.log('push data');
+          imageIdSpecificToolData.push({ daa: 'test' });
+          imageIdSpecificToolData.push({
+            data: bbox_data.result[stuid][seruid][siuid],
+          });
+        }
+      }
+    }
+
+    // console.log('idpairs:', imageIdSopInstanceUidPairs);
+    // console.log('image id: ', imageId);
+
+    // imageIdSpecificToolData.push({ daa: 'sdfgbboxdata' });
+    // imageIdSpecificToolData.push({ dat: 'bboxysdfgdata' });
+    // imageIdSpecificToolData.push({ data: 'bboxdata' });
+    // imageIdSpecificToolData.push({ daa: 'sdfgbboxdata' });
+    // imageIdSpecificToolData.push({ dat: 'bboxysdfgdata' });
+  }
+
+  const _getImageId = (imageIdSopInstanceUidPairs, sopInstanceUID) => {
+    const imageIdSopInstanceUidPairsEntry = imageIdSopInstanceUidPairs.find(
+      imageIdSopInstanceUidPairsEntry =>
+        imageIdSopInstanceUidPairsEntry.sopInstanceUID === sopInstanceUID
+    );
+
+    return imageIdSopInstanceUidPairsEntry.imageId;
+  };
+
+  function _getOrCreateImageIdSpecificToolData(toolState, imageId, toolName) {
+    if (toolState.hasOwnProperty(imageId) === false) {
+      toolState[imageId] = {};
+      console.log('created idspecific tooldata: ', toolState);
+    }
+
+    const imageIdToolState = toolState[imageId];
+
+    // If we don't have tool state for this type of tool, add an empty object
+    if (imageIdToolState.hasOwnProperty(toolName) === false) {
+      imageIdToolState[toolName] = {
+        data: [],
+      };
+    }
+
+    return imageIdToolState[toolName].data;
+  }
+
+  function _getImageIdSopInstanceUidPairsForDisplaySet(
+    studies,
+    StudyInstanceUID,
+    SeriesInstanceUID
+  ) {
+    const study = studies.find(
+      study => study.StudyInstanceUID === StudyInstanceUID
+    );
+
+    const displaySets = study.displaySets.filter(set => {
+      return set.SeriesInstanceUID === SeriesInstanceUID;
+    });
+
+    if (displaySets.length > 1) {
+      console.warn(
+        'More than one display set with the same SeriesInstanceUID. This is not supported yet...'
+      );
+      // TODO -> We could make check the instance list and see if any match?
+      // Do we split the segmentation into two cornerstoneTools segmentations if there are images in both series?
+      // ^ Will that even happen?
+    }
+
+    const referencedDisplaySet = displaySets[0];
+
+    return referencedDisplaySet.images.map(image => {
+      return {
+        imageId: image.getImageId(),
+        sopInstanceUID: image.getSOPInstanceUID(),
+      };
+    });
   }
 
   const upload = studies => {
