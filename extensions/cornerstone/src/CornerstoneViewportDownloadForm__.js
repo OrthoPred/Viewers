@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import '../../../platform/viewer/src/progress/progress.css';
 import { useTranslation } from 'react-i18next';
 import isImportant from '@ohif/core/src/utils/isImportant';
-// import setCornerstoneLayout from './utils/setCornerstoneLayout';
+import setCornerstoneLayout from './utils/setCornerstoneLayout';
 // import { useDispatch } from 'react-redux';
 
 // import { servicesManager } from '../../../platform/viewer/src/App';
@@ -60,70 +60,59 @@ function CornerstoneViewportDownloadForm(props) {
   console.log('upload');
   console.log(props.studies);
   console.log(props.progressData, props.progressId);
-  let progress = 0;
 
-  async function longPoll() {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.addEventListener('error', error => {
-        console.log('An error occurred while retrieving the JSON data');
-        reject(error);
+  const longPoll = () => {
+    console.log('start longPoll');
+    let progressData = 0;
+    let progressId = 0;
+    let timerId = setInterval(() => {
+      progressData += 20;
+      props.setInferenceProgress(progressId, progressData);
+    }, 1000);
+
+    setTimeout(() => {
+      clearInterval(timerId);
+      console.log('stop');
+    }, 20000);
+    /**
+     * Simple long polling client based on JQuery
+     */
+
+    /**
+     * Request an update to the server and once it has answered, then update
+     * the content and request again.
+     * The server is supposed to response when a change has been made on data.
+     */
+    function update() {
+      $.ajax({
+        url: '/data-update',
+        success: function(data) {
+          $('#dateChange').text(data.date);
+          $('#content').text(data.content);
+          update();
+        },
+        timeout: 500000, //If timeout is reached run again
       });
+    }
 
-      xhr.addEventListener('timeout', error => {
-        console.log('Timeout error');
-        reject(error);
+    /**
+     * Perform first data request. After taking this data, just query the
+     * server and refresh when answered (via update call).
+     */
+    function load() {
+      $.ajax({
+        url: '/data',
+        success: function(data) {
+          $('#content').text(data.content);
+          update();
+        },
       });
+    }
 
-      xhr.addEventListener('load', event => {
-        if (event.target.status === 404) {
-          reject(new Error('No JSON data found'));
-        } else {
-          if (!xhr.responseText) {
-            console.log('Response was undefined');
-            reject(new Error('Response was undefined'));
-          } else {
-            // console.log(JSON.stringify(xhr.responseText, null, 2));
-            const data = JSON.parse(xhr.responseText);
-            resolve(data);
-
-            // let myGreeting = setTimeout(function() {
-            //   resolve({ status: 'in progress', progress: progress });
-            // }, 2000);
-          }
-        }
-      });
-
-      xhr.open('GET', '/api/longpoll'); // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
-      xhr.timeout = 60000; // Has to be after `.open()`
-
-      xhr.setRequestHeader('Accept', 'application/json');
-
-      xhr.send();
+    $(document).ready(function() {
+      load();
     });
-  }
-
-  function poll() {
-    console.log('running poll');
-    longPoll().then(
-      function(output) {
-        console.log('long poll output: ', output);
-        props.setInferenceProgress(output);
-        if (output.progress != 'finished') {
-          console.log('*****');
-          console.log('rerun poll');
-
-          poll();
-        } else {
-          console.log('polling finished');
-        }
-      },
-      function(error) {
-        console.log('reject in longPoll, ', error);
-        props.onClose();
-      }
-    );
-  }
+  };
 
   const upload = studies => {
     console.log('before zipAll');
@@ -136,7 +125,7 @@ function CornerstoneViewportDownloadForm(props) {
           function() {
             props.onClose();
             console.log('modal service vége');
-            poll();
+            longPoll();
           },
           function() {
             console.log('reject in sendReq');
@@ -311,80 +300,155 @@ CornerstoneViewportDownloadForm.propTypes = {
 
 export default CornerstoneViewportDownloadForm;
 
+//********************
+
+function xhrLoad(url, onload, onerror) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'arraybuffer';
+  xhr.onload = function xhr_onload() {
+    if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) {
+      onload(xhr.response);
+    } else {
+      onerror();
+    }
+  };
+  xhr.onerror = onerror;
+  xhr.send(null);
+}
+
+function asyncLoad(url, onload, onerror) {
+  xhrLoad(
+    url,
+    function(arrayBuffer) {
+      assert(
+        arrayBuffer,
+        'Loading data file "' + url + '" failed (no arrayBuffer).'
+      );
+      onload(new Uint8Array(arrayBuffer));
+    },
+    function(event) {
+      if (onerror) {
+        onerror();
+      } else {
+        throw 'Loading data file "' + url + '" failed.';
+      }
+    }
+  );
+}
+
 //**************
 
-// async function longPoll() {
-//   var xhr = new XMLHttpRequest(); // Put the xhr object in the file objects to be able to reference it later.
-//   const url = 'url';
-//   xhr.open('GET', url); // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
-//   xhr.timeout = timeout; // Has to be after `.open()`
+function _uploadData(files, dataBlocks) {
+  var xhr = new XMLHttpRequest(); // Put the xhr object in the file objects to be able to reference it later.
 
-//   xhr.onload = function(e) {
-//     this._finishedUploading(files, xhr, e);
-//   };
+  file.xhr = xhr;
 
-//   xhr.ontimeout = function() {
-//     console.log('timeout error');
-//   };
+  var method = this.resolveOption(this.options.method, files);
+  var url = this.resolveOption(this.options.url, files);
 
-//   xhr.onerror = function() {
-//     console.log('xhr error');
-//   };
+  xhr.open(method, url, true); // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
+  xhr.timeout = this.resolveOption(this.options.timeout, files); // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
 
-//   xhr.setRequestHeader('Accept', 'application/json');
+  xhr.withCredentials = !!this.options.withCredentials;
 
-//   xhr.send();
-// }
+  xhr.onload = function(e) {
+    this._finishedUploading(files, xhr, e);
+  };
 
-// const longPoll = () => {
-//   console.log('start longPoll');
-//   let progressData = 0;
-//   let progressId = 0;
-//   let timerId = setInterval(() => {
-//     progressData += 20;
-//     props.setInferenceProgress(progressId, progressData);
-//   }, 1000);
+  xhr.ontimeout = function() {
+    this._handleUploadError(
+      files,
+      xhr,
+      'Request timedout after '.concat(this.options.timeout, ' seconds')
+    );
+  };
 
-//   setTimeout(() => {
-//     clearInterval(timerId);
-//     console.log('stop');
-//   }, 20000);
-//   /**
-//    * Simple long polling client based on JQuery
-//    */
+  xhr.onerror = function() {
+    this._handleUploadError(files, xhr);
+  }; // Some browsers do not have the .upload property
 
-/**
- * Request an update to the server and once it has answered, then update
- * the content and request again.
- * The server is supposed to response when a change has been made on data.
- */
-//   function update() {
-//     $.ajax({
-//       url: '/data-update',
-//       success: function(data) {
-//         $('#dateChange').text(data.date);
-//         $('#content').text(data.content);
-//         update();
-//       },
-//       timeout: 500000, //If timeout is reached run again
-//     });
-//   }
+  var progressObj = xhr.upload != null ? xhr.upload : xhr;
 
-//   /**
-//    * Perform first data request. After taking this data, just query the
-//    * server and refresh when answered (via update call).
-//    */
-//   function load() {
-//     $.ajax({
-//       url: '/data',
-//       success: function(data) {
-//         $('#content').text(data.content);
-//         update();
-//       },
-//     });
-//   }
+  progressObj.onprogress = function(e) {
+    return this._updateFilesUploadProgress(files, xhr, e);
+  };
 
-//   $(document).ready(function() {
-//     load();
-//   });
-// };
+  var headers = {
+    Accept: 'application/json',
+    'Cache-Control': 'no-cache',
+    'X-Requested-With': 'XMLHttpRequest',
+  };
+
+  for (var headerName in headers) {
+    var headerValue = headers[headerName];
+
+    if (headerValue) {
+      xhr.setRequestHeader(headerName, headerValue);
+    }
+  }
+
+  var formData = new FormData(); // Adding all @options parameters
+
+  this._addFormElementData(formData); // Finally add the files
+  // Has to be last because some servers (eg: S3) expect the file to be the last parameter
+
+  for (var i = 0; i < dataBlocks.length; i++) {
+    var dataBlock = dataBlocks[i];
+    formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
+  }
+
+  // this.submitRequest(xhr, formData, files);
+
+  xhr.send(formData);
+} // Transforms all files with this.options.transformFile and invokes done with the transformed files when done.
+
+//***************
+
+function parseQueryAndRetrieveDICOMWebData(query) {
+  return new Promise((resolve, reject) => {
+    const url = query.url;
+
+    if (!url) {
+      return reject(new Error('No URL was specified. Use ?url=$yourURL'));
+    }
+
+    const oReq = new XMLHttpRequest();
+
+    // Add event listeners for request failure
+    oReq.addEventListener('error', error => {
+      log.warn('An error occurred while retrieving the JSON data');
+      reject(error);
+    });
+
+    // When the JSON has been returned, parse it into a JavaScript Object
+    oReq.addEventListener('load', event => {
+      if (event.target.status === 404) {
+        reject(new Error('No JSON data found'));
+      }
+
+      // Parse the response content
+      // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/responseText
+      if (!oReq.responseText) {
+        log.warn('Response was undefined');
+        reject(new Error('Response was undefined'));
+      }
+
+      log.info(JSON.stringify(oReq.responseText, null, 2));
+
+      const data = JSON.parse(oReq.responseText);
+
+      resolve({ studies: data });
+    });
+
+    // Open the Request to the server for the JSON data
+    // In this case we have a server-side route called /api/
+    // which responds to GET requests with the study data
+    log.info(`Sending Request to: ${url}`);
+    oReq.open('GET', url);
+    oReq.setRequestHeader('Accept', 'application/json');
+
+    // Fire the request to the server
+    oReq.send();
+  });
+}

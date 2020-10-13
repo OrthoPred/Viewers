@@ -13,7 +13,7 @@ export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children, config }) => {
   const activeContexts = useSelector(state => getActiveContexts(state));
-  console.log('active contexts: ', activeContexts);
+  // console.log('active contexts: ', activeContexts);
 
   return (
     <AppContext.Provider value={{ appConfig: config, activeContexts }}>

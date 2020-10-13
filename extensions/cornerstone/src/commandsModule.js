@@ -187,7 +187,7 @@ const commandsModule = ({ servicesManager }) => {
       activeViewportIndex,
     }) => {
       const study = studyMetadataManager.get(StudyInstanceUID);
-      console.log('jump to image', study);
+      // console.log('jump to image', study);
       const displaySet = study.findDisplaySet(ds => {
         return (
           ds.images &&

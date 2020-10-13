@@ -41,24 +41,14 @@ const commandsManagerConfig = {
   getActiveContexts: () => getActiveContexts(store.getState()),
 };
 
-/** Managers */
 const commandsManager = new CommandsManager(commandsManagerConfig);
 const servicesManager = new ServicesManager();
-// console.log('const  sevicemanager ');
 const hotkeysManager = new HotkeysManager(commandsManager, servicesManager);
 let extensionManager;
 /** ~~~~~~~~~~~~~ End Application Setup */
 
 // TODO[react] Use a provider when the whole tree is React
 window.store = store;
-
-// window.ohif = window.ohif || {};
-// window.ohif.app = {
-//   commandsManager,
-//   hotkeysManager,
-//   servicesManager,
-//   extensionManager,
-// };
 
 class App extends Component {
   static propTypes = {

@@ -8,15 +8,15 @@ const mapStateToProps = state => {
   console.log('state: ', state);
   console.log(state.orthoFlow.progress, state.orthoFlow.lastUpdated);
   return {
-    progressData: state.orthoFlow.progress,
+    results: state.orthoFlow.results,
     progressId: state.orthoFlow.lastUpdated,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    setInferenceProgress: (progressId, progressData) => {
-      dispatch(setInferenceProgress(progressId, progressData));
+    setInferenceProgress: (progressId, results) => {
+      dispatch(setInferenceProgress(progressId, results));
     },
     clearInferenceProgress: progressId => {
       dispatch(clearInferenceProgress(progressId));

@@ -127,7 +127,7 @@ class Viewer extends Component {
 
   componentDidUpdate(prevProps) {
     const { studies, isStudyLoaded } = this.props;
-    console.log('props:**** ', this.props);
+    // console.log('props:**** ', this.props);
     if (studies !== prevProps.studies) {
       this.setState({
         thumbnails: _mapStudiesToThumbnails(studies),
@@ -184,8 +184,8 @@ class Viewer extends Component {
         {/* TOOLBAR */}
         <ErrorBoundaryDialog context="ToolbarRow">
           <ToolbarRow
-            {...console.log(this.props.progressData)}
-            text={this.props.progressData}
+            {...console.log(this.props.orthoFlowResults)}
+            text={this.props.orthoFlowResults.progress}
             isLeftSidePanelOpen={this.state.isLeftSidePanelOpen}
             isRightSidePanelOpen={this.state.isRightSidePanelOpen}
             selectedLeftSidePanel={
@@ -276,11 +276,11 @@ class Viewer extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('state in viewer: ', state);
-  console.log(state.orthoFlow.progress, state.orthoFlow.lastUpdated);
+  // console.log('state in viewer: ', state);
+  // console.log(state.orthoFlow);
   return {
-    progressData: state.orthoFlow.progress,
-    progressId: state.orthoFlow.lastUpdated,
+    orthoFlowResults: state.orthoFlow,
+    // progressId: state.orthoFlow.lastUpdated,
   };
 };
 
