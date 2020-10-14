@@ -206,10 +206,10 @@ function _initHotkeys(appConfigHotkeys) {
 }
 
 /*
- * Only wrap/use hot if in dev.
+ * Only wrap/use hot if in dev
  */
 
-console.log('itt a vége: ', servicesManager);
+console.log('vége: ', servicesManager);
 const ExportedApp = process.env.NODE_ENV === 'development' ? hot(App) : App;
 
 export default ExportedApp;

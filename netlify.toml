@@ -12,6 +12,7 @@
   base = ""
   publish = ".netlify/www/"
   command = "chmod +x .netlify/build-deploy-preview.sh && .netlify/build-deploy-preview.sh"
+  ignore = "/bin/false"
 
 # NODE_VERSION in root `.nvmrc` takes priority
 # YARN_FLAGS: https://www.netlify.com/docs/build-gotchas/#yarn
