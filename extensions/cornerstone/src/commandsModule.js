@@ -89,7 +89,7 @@ const commandsModule = ({ servicesManager }) => {
     },
     showDownloadViewportModal: ({ title, viewports, studies }) => {
       //download image
-      console.log('show viewport modal start');
+      //console.log('show viewport modal start');
       const activeViewportIndex = viewports.activeViewportIndex;
       const { UIModalService } = servicesManager.services;
       // console.log('studies from showmodal:', studies);
@@ -104,7 +104,7 @@ const commandsModule = ({ servicesManager }) => {
           },
         });
       }
-      console.log('show viewport modal end');
+      // console.log('show viewport modal end');
     },
 
     getNearbyToolData({ element, canvasCoordinates, availableToolTypes }) {
@@ -187,7 +187,7 @@ const commandsModule = ({ servicesManager }) => {
       activeViewportIndex,
     }) => {
       const study = studyMetadataManager.get(StudyInstanceUID);
-      console.log('jump to image', study);
+      //console.log('jump to image', study);
       const displaySet = study.findDisplaySet(ds => {
         return (
           ds.images &&
@@ -195,7 +195,7 @@ const commandsModule = ({ servicesManager }) => {
         );
       });
 
-      console.log('jump to image', study, displaySet);
+      //console.log('jump to image', study, displaySet);
       displaySet.SOPInstanceUID = SOPInstanceUID;
       displaySet.frameIndex = frameIndex;
 

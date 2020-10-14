@@ -164,8 +164,8 @@ export default function init({ servicesManager, configuration }) {
   csTools.setToolActive('ZoomTouchPinch', {});
   csTools.setToolEnabled('Overlay', {});
 
-  csTools.addTool(RTStructDisplayTool);
-  csTools.setToolEnabled('RTStruct');
+  // csTools.addTool(RTStructDisplayTool);
+  // csTools.setToolEnabled('RTStruct');
 
   csTools.addTool(DrawBBoxTool);
   csTools.setToolEnabled('DrawBBox');

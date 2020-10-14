@@ -57,9 +57,9 @@ var uploadProgress = 0;
 
 // const CornerstoneViewportDownloadForm = props => {
 function CornerstoneViewportDownloadForm(props) {
-  console.log('upload');
-  console.log(props.studies);
-  console.log(props.progressData, props.progressId);
+  // console.log('upload');
+  // console.log(props.studies);
+  // console.log(props.progressData, props.progressId);
   let progress = 0;
 
   async function longPoll() {
@@ -131,27 +131,27 @@ function CornerstoneViewportDownloadForm(props) {
   const toolState = globalImageIdSpecificToolStateManager.saveToolState();
 
   function loadBBoxData(bbox_data) {
-    console.log('load bbox data, ', bbox_data);
+    // console.log('load bbox data, ', bbox_data);
 
     for (const stuid in bbox_data.result) {
-      console.log(`stuid:${stuid}`);
+      // console.log(`stuid:${stuid}`);
       for (const seruid in bbox_data.result[stuid]) {
-        console.log(`seruid:${seruid}`);
+        // console.log(`seruid:${seruid}`);
         const imageIdSopInstanceUidPairs = _getImageIdSopInstanceUidPairsForDisplaySet(
           props.studies,
           stuid,
           seruid
         );
         for (const siuid in bbox_data.result[stuid][seruid]) {
-          console.log(`siuid:${siuid}`);
+          // console.log(`siuid:${siuid}`);
           const imageId = _getImageId(imageIdSopInstanceUidPairs, siuid);
-          console.log(siuid, imageId);
+          // console.log(siuid, imageId);
           const imageIdSpecificToolData = _getOrCreateImageIdSpecificToolData(
             toolState,
             imageId,
             'DrawBBox'
           );
-          console.log('push data');
+          // console.log('push data');
 
           imageIdSpecificToolData.push({
             data: bbox_data.result[stuid][seruid][siuid],
@@ -173,7 +173,7 @@ function CornerstoneViewportDownloadForm(props) {
   function _getOrCreateImageIdSpecificToolData(toolState, imageId, toolName) {
     if (toolState.hasOwnProperty(imageId) === false) {
       toolState[imageId] = {};
-      console.log('created idspecific tooldata: ', toolState);
+      // console.log('created idspecific tooldata: ', toolState);
     }
 
     const imageIdToolState = toolState[imageId];
@@ -221,27 +221,27 @@ function CornerstoneViewportDownloadForm(props) {
   }
 
   const upload = studies => {
-    console.log('before zipAll');
+    // console.log('before zipAll');
 
     zipAll(studies).then(
       function(output) {
         //accept
-        console.log('after zipAll, before sendreq');
+        // console.log('after zipAll, before sendreq');
         sendRequest(output).then(
           function() {
             props.onClose();
-            console.log('modal service vége');
+            // console.log('modal service vége');
             poll();
           },
           function() {
-            console.log('reject in sendReq');
+            // console.log('reject in sendReq');
             props.onClose();
           }
         );
-        console.log('after sendreq');
+        // console.log('after sendreq');
       },
       function() {
-        console.log('reject in zipAll');
+        // console.log('reject in zipAll');
         props.onClose();
       }
     );
@@ -299,7 +299,7 @@ function CornerstoneViewportDownloadForm(props) {
         );
         resolve(blob);
       } else {
-        console.log('reject in zipAll');
+        // console.log('reject in zipAll');
         reject();
       }
       // const blob = zip.generateAsync({ type: 'blob' });
@@ -326,7 +326,7 @@ function CornerstoneViewportDownloadForm(props) {
           uploadProgress = (event.loaded / event.total) * 100;
           //  = metadata.percent.toFixed(2);
           element.style.width = uploadProgress + '%';
-          console.log('upload progress: ', uploadProgress + ' %');
+          // console.log('upload progress: ', uploadProgress + ' %');
         }
       });
 
@@ -334,7 +334,7 @@ function CornerstoneViewportDownloadForm(props) {
         // const copy = prgs;
         // copy[file.name] = { state: 'done', percentage: 100 };
         // prgs = copy;
-        console.log('upload event listener load');
+        // console.log('upload event listener load');
         resolve(req.response);
       });
 
@@ -342,7 +342,7 @@ function CornerstoneViewportDownloadForm(props) {
         // const copy = prgs;
         // copy[file.name] = { state: 'error', percentage: 0 };
         // prgs = copy;
-        console.log('upload event listener error');
+        // console.log('upload event listener error');
         reject(req.response);
       });
 

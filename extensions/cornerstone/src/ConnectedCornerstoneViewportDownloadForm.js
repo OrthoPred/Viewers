@@ -5,8 +5,8 @@ import OHIF from '@ohif/core';
 const { setInferenceProgress, clearInferenceProgress } = OHIF.redux.actions;
 
 const mapStateToProps = state => {
-  console.log('state: ', state);
-  console.log(state.orthoFlow.progress, state.orthoFlow.lastUpdated);
+  // console.log('state: ', state);
+  // console.log(state.orthoFlow.progress, state.orthoFlow.lastUpdated);
   return {
     results: state.orthoFlow.results,
     progressId: state.orthoFlow.lastUpdated,

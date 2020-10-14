@@ -44,29 +44,29 @@ export default class DrawBBox extends BaseTool {
   renderToolData(evt) {
     const eventData = evt.detail;
 
-    console.log('rtstruct ev data: ', eventData);
+    // console.log('rtstruct ev data: ', eventData);
     const toolState = getToolState(evt.currentTarget, this.name);
     const { canvasContext, image } = eventData;
     const context = getNewContext(canvasContext.canvas);
     var element = eventData.element;
 
-    console.log('drawbbox toolstate, ', toolState);
+    // console.log('drawbbox toolstate, ', toolState);
 
     const modes = toolState.data[0]['data']['modes'];
     const img_type = toolState.data[0]['data']['img_desc'];
 
-    console.log('/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/');
-    console.log('modes: ', modes);
-    console.log('img_type: ', img_type);
+    // console.log('/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/');
+    // console.log('modes: ', modes);
+    // console.log('img_type: ', img_type);
 
     for (const user in toolState.data[0]['data']['shapes']) {
-      console.log(`user:${user}`);
+      // console.log(`user:${user}`);
       for (const task in toolState.data[0]['data']['shapes'][user]) {
-        console.log(`task:${task}`);
+        // console.log(`task:${task}`);
         for (const bbox in toolState.data[0]['data']['shapes'][user][task][
           'bboxes'
         ]) {
-          console.log(`bbox:${bbox}`);
+          // console.log(`bbox:${bbox}`);
           const alabel =
             toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
               'alabel'
@@ -83,7 +83,7 @@ export default class DrawBBox extends BaseTool {
             toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
               'br'
             ];
-          console.log(`alabel:${alabel}, plabel:${plabel}, tl:${tl}, br:${br}`);
+          // console.log(`alabel:${alabel}, plabel:${plabel}, tl:${tl}, br:${br}`);
 
           drawRect(
             context,
