@@ -152,22 +152,13 @@ function CornerstoneViewportDownloadForm(props) {
             'DrawBBox'
           );
           console.log('push data');
-          imageIdSpecificToolData.push({ daa: 'test' });
+
           imageIdSpecificToolData.push({
             data: bbox_data.result[stuid][seruid][siuid],
           });
         }
       }
     }
-
-    // console.log('idpairs:', imageIdSopInstanceUidPairs);
-    // console.log('image id: ', imageId);
-
-    // imageIdSpecificToolData.push({ daa: 'sdfgbboxdata' });
-    // imageIdSpecificToolData.push({ dat: 'bboxysdfgdata' });
-    // imageIdSpecificToolData.push({ data: 'bboxdata' });
-    // imageIdSpecificToolData.push({ daa: 'sdfgbboxdata' });
-    // imageIdSpecificToolData.push({ dat: 'bboxysdfgdata' });
   }
 
   const _getImageId = (imageIdSopInstanceUidPairs, sopInstanceUID) => {

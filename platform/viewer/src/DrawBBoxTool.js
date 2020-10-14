@@ -46,73 +46,74 @@ export default class DrawBBox extends BaseTool {
 
     console.log('rtstruct ev data: ', eventData);
     const toolState = getToolState(evt.currentTarget, this.name);
+    const { canvasContext, image } = eventData;
+    const context = getNewContext(canvasContext.canvas);
+    var element = eventData.element;
 
     console.log('drawbbox toolstate, ', toolState);
-    console.log('evt.tgt, ', evt.currentTarget);
-    console.log('toolstate, ', this.name);
 
-    var element = eventData.element;
-    const { canvasContext, image } = eventData;
-    // const stats = image.stats;
-    console.log('event data:', eventData);
-    // console.log('image:', image);
+    const modes = toolState.data[0]['data']['modes'];
+    const img_type = toolState.data[0]['data']['img_desc'];
 
-    // var orthoFlowModule = cornerstone.metaData.get(
-    //   'orthoFlowModule',
-    //   image.imageId
-    // );
-    // console.log('orthoFlowModule', orthoFlowModule);
-    // console.log('rows:', imagePixelModule.rows);
+    console.log('/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/');
+    console.log('modes: ', modes);
+    console.log('img_type: ', img_type);
+
+    for (const user in toolState.data[0]['data']['shapes']) {
+      console.log(`user:${user}`);
+      for (const task in toolState.data[0]['data']['shapes'][user]) {
+        console.log(`task:${task}`);
+        for (const bbox in toolState.data[0]['data']['shapes'][user][task][
+          'bboxes'
+        ]) {
+          console.log(`bbox:${bbox}`);
+          const alabel =
+            toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
+              'alabel'
+            ];
+          const plabel =
+            toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
+              'plabel'
+            ];
+          const tl =
+            toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
+              'tl'
+            ];
+          const br =
+            toolState.data[0]['data']['shapes'][user][task]['bboxes'][bbox][
+              'br'
+            ];
+          console.log(`alabel:${alabel}, plabel:${plabel}, tl:${tl}, br:${br}`);
+
+          drawRect(
+            context,
+            element,
+            {
+              x: tl[0],
+              y: tl[1],
+              highlight: true,
+              active: false,
+            },
+            {
+              x: br[0],
+              y: br[1],
+              highlight: true,
+              active: false,
+            },
+            {
+              color: 'rgb(255, 0, 0)',
+            }
+          );
+        }
+      }
+    }
 
     // const textLines = [];
-    const context = getNewContext(canvasContext.canvas);
     // const color = toolColors.getToolColor();
-
     // Object.keys(stats).forEach(function(key) {
     //   const text = `${key} : ${stats[key]}`;
-
     //   textLines.push(text);
     // });
-
     // drawTextBox(context, textLines, 0, 0, color);
-
-    drawRect(
-      context,
-      element,
-      {
-        x: 135.74007220216606,
-        y: 114.94584837545126,
-        highlight: true,
-        active: false,
-      },
-      {
-        x: 300.74007220216606,
-        y: 190.94584837545126,
-        highlight: true,
-        active: false,
-      },
-      {
-        color: 'rgb(255, 0, 0)',
-      }
-    );
-    drawRect(
-      context,
-      element,
-      {
-        x: 13.74007220216606,
-        y: 11.94584837545126,
-        highlight: true,
-        active: false,
-      },
-      {
-        x: 50.74007220216606,
-        y: 30.94584837545126,
-        highlight: true,
-        active: false,
-      },
-      {
-        color: 'rgb(255, 255, 0)',
-      }
-    );
   }
 }

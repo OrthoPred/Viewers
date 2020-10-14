@@ -1,11 +1,11 @@
 // import cloneDeep from 'lodash.clonedeep';
 
 const defaultState = {
-  progress: 'starting',
+  progress: '',
 };
 
 const orthoFlow = (state = defaultState, action) => {
-  let results = { progress: 'starting' };
+  let results = { progress: '' };
   // let lastUpdated;
   // console.log('got data: ', action.progressId);
   // console.log(action.progressData);
