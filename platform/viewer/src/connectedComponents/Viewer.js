@@ -187,7 +187,7 @@ class Viewer extends Component {
         <ErrorBoundaryDialog context="ToolbarRow">
           <ToolbarRow
             {...console.log(this.props.orthoFlowResults)}
-            text={this.props.orthoFlowResults.progress}
+            text={this.props.orthoFlowResults.results}
             isLeftSidePanelOpen={this.state.isLeftSidePanelOpen}
             isRightSidePanelOpen={this.state.isRightSidePanelOpen}
             selectedLeftSidePanel={
@@ -240,11 +240,11 @@ class Viewer extends Component {
                   activeIndex={this.props.activeViewportIndex}
                 />
               ) : (
-                <ConnectedStudyBrowser
-                  studies={this.state.thumbnails}
-                  studyMetadata={this.props.studies}
-                />
-              )}
+                  <ConnectedStudyBrowser
+                    studies={this.state.thumbnails}
+                    studyMetadata={this.props.studies}
+                  />
+                )}
             </SidePanel>
           </ErrorBoundaryDialog>
 
@@ -298,7 +298,7 @@ export default connect(mapStateToProps, null)(withDialog(Viewer));
  * @param {Study[]} studies
  * @param {DisplaySet[]} studies[].displaySets
  */
-const _mapStudiesToThumbnails = function(studies) {
+const _mapStudiesToThumbnails = function (studies) {
   return studies.map(study => {
     const { StudyInstanceUID } = study;
 

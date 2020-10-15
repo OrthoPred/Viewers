@@ -15,14 +15,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setInferenceProgress: (progressId, results) => {
-      dispatch(setInferenceProgress(progressId, results));
+    setInferenceProgress: (results) => {
+      dispatch(setInferenceProgress(results));
     },
     clearInferenceProgress: progressId => {
       dispatch(clearInferenceProgress(progressId));
     },
   };
 };
+
 
 const ConnectedCornerstoneViewportDownloadForm = connect(
   mapStateToProps,

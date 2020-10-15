@@ -61,12 +61,14 @@ class ViewerLocalFileData extends Component {
 
   render() {
     const onDrop = async acceptedFiles => {
+      if (this.state.studies) {
+        // this.setState({ studies: null, error: null });
+        return;
+      }
       if (acceptedFiles.length > 300) {
         acceptedFiles = acceptedFiles.slice(0, 300);
       }
-      if (this.state.studies) {
-        this.setState({ studies: null, error: null });
-      }
+
       this.setState({ loading: true });
 
       cornerstoneWADOImageLoader.wadouri.fileManager.purge();
@@ -100,24 +102,24 @@ class ViewerLocalFileData extends Component {
                 }
               />
             ) : (
-              <div className={'drag-drop-instructions'}>
-                <div className={'drag-drop-contents'}>
-                  {this.state.loading ? (
-                    <h3>
-                      {this.props.t('Loading...')}
-                    </h3> /* this.props.t: translation*/
-                  ) : (
-                    <>
+                <div className={'drag-drop-instructions'}>
+                  <div className={'drag-drop-contents'}>
+                    {this.state.loading ? (
                       <h3>
-                        {this.props.t(
-                          'Drag and Drop DICOM files here to load them in the Viewer'
-                        )}
-                      </h3>
-                    </>
-                  )}
+                        {this.props.t('Loading...')}
+                      </h3> /* this.props.t: translation*/
+                    ) : (
+                        <>
+                          <h3>
+                            {this.props.t(
+                              'Drag and Drop DICOM files here to load them in the Viewer'
+                            )}
+                          </h3>
+                        </>
+                      )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         )}
       </Dropzone>

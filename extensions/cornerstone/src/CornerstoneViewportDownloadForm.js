@@ -4,12 +4,8 @@ import PropTypes from 'prop-types';
 import '../../../platform/viewer/src/progress/progress.css';
 import { useTranslation } from 'react-i18next';
 import isImportant from '@ohif/core/src/utils/isImportant';
-// import setCornerstoneLayout from './utils/setCornerstoneLayout';
-// import { useDispatch } from 'react-redux';
 
-// import { servicesManager } from '../../../platform/viewer/src/App';
-// console.log('imported svc mgr in dlform, ', servicesManager);
-// // const { UIModalService } = servicesManager.services;
+// import { bboxdata } from './bboxdata.js';
 
 const REQUIRED_TAGS = [
   'Modality',
@@ -57,9 +53,7 @@ var uploadProgress = 0;
 
 // const CornerstoneViewportDownloadForm = props => {
 function CornerstoneViewportDownloadForm(props) {
-  // console.log('upload');
-  // console.log(props.studies);
-  // console.log(props.progressData, props.progressId);
+
   let progress = 0;
 
   async function longPoll() {
@@ -83,13 +77,9 @@ function CornerstoneViewportDownloadForm(props) {
             console.log('Response was undefined');
             reject(new Error('Response was undefined'));
           } else {
-            // console.log(JSON.stringify(xhr.responseText, null, 2));
             const data = JSON.parse(xhr.responseText);
             resolve(data);
 
-            // let myGreeting = setTimeout(function() {
-            //   resolve({ status: 'in progress', progress: progress });
-            // }, 2000);
           }
         }
       });
@@ -104,22 +94,25 @@ function CornerstoneViewportDownloadForm(props) {
   }
 
   function poll() {
-    console.log('running poll');
+    // console.log('running poll');
     longPoll().then(
-      function(output) {
+      function (output) {
         console.log('long poll output: ', output);
-        props.setInferenceProgress(output);
+        console.log('long poll output.progress: ', output.progress);
         if (output.progress != 'finished') {
-          console.log('*****');
-          console.log('rerun poll');
+          props.setInferenceProgress(output.progress);
+        }
+        if (output.progress != 'finished') {
+          // console.log('*****');
+          // console.log('rerun poll');
 
           poll();
         } else {
-          console.log('polling finished');
+          // console.log('polling finished');
           loadBBoxData(output);
         }
       },
-      function(error) {
+      function (error) {
         console.log('reject in longPoll, ', error);
         props.onClose();
       }
@@ -224,23 +217,24 @@ function CornerstoneViewportDownloadForm(props) {
     // console.log('before zipAll');
 
     zipAll(studies).then(
-      function(output) {
+      function (output) {
         //accept
         // console.log('after zipAll, before sendreq');
         sendRequest(output).then(
-          function() {
+          function () {
             props.onClose();
-            // console.log('modal service vége');
+            console.log('start load bboxdata');
+            // loadBBoxData(bboxdata);
             poll();
           },
-          function() {
+          function () {
             // console.log('reject in sendReq');
             props.onClose();
           }
         );
         // console.log('after sendreq');
       },
-      function() {
+      function () {
         // console.log('reject in zipAll');
         props.onClose();
       }
@@ -249,9 +243,9 @@ function CornerstoneViewportDownloadForm(props) {
 
   const [t] = useTranslation('ViewportDownloadForm');
 
-  var zipAll = function() {
+  var zipAll = function () {
     var element = document.getElementById('myBar');
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       var meta_tags = {};
       var foundImportant = false;
 
@@ -311,7 +305,7 @@ function CornerstoneViewportDownloadForm(props) {
   //   downloadBlob(studies);
   // };
 
-  var sendRequest = function(file) {
+  var sendRequest = function (file) {
     var element = document.getElementById('myBar');
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();

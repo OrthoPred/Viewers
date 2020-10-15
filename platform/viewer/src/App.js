@@ -151,7 +151,7 @@ function sendSessionName() {
   var url = '/api/session/';
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
       // var json = JSON.parse(xhr.responseText);
     }
@@ -206,10 +206,10 @@ function _initHotkeys(appConfigHotkeys) {
 }
 
 /*
- * Only wrap/use hot if in dev
+ * Only wrap/use hot if in dev.
  */
 
-console.log('vége: ', servicesManager);
+console.log('itt a vége: ', servicesManager);
 const ExportedApp = process.env.NODE_ENV === 'development' ? hot(App) : App;
 
 export default ExportedApp;

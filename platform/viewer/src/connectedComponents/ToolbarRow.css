@@ -11,6 +11,20 @@
   align-items: center;
 }
 
+.inferenceProgressBar {
+  width: 300px;
+  height: 8px;
+  background-color: rgb(246, 243, 250);
+  border-radius: 5px;
+}
+
+.inferenceProgress {
+  background-color: rgba(103, 58, 183, 1);
+  height: 100%;
+  margin: 0;
+  border-radius: 5px;
+}
+
 ToolbarRow.expanded {
   height: calc(var(--toolbar-height) + var(--toolbar-drawer-height));
 }

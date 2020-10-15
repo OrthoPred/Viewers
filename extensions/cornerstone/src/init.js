@@ -5,8 +5,6 @@ import csTools from 'cornerstone-tools';
 import merge from 'lodash.merge';
 import initCornerstoneTools from './initCornerstoneTools.js';
 import DrawBBoxTool from '../../../platform/viewer/src/DrawBBoxTool';
-import RTStructDisplayTool from '../../dicom-rt/src/tools/RTStructDisplayTool';
-
 /**
  *
  * @param {Object} servicesManager
@@ -163,9 +161,6 @@ export default function init({ servicesManager, configuration }) {
   csTools.setToolActive('PanMultiTouch', { pointers: 2 }); // TODO: Better error if no options
   csTools.setToolActive('ZoomTouchPinch', {});
   csTools.setToolEnabled('Overlay', {});
-
-  // csTools.addTool(RTStructDisplayTool);
-  // csTools.setToolEnabled('RTStruct');
 
   csTools.addTool(DrawBBoxTool);
   csTools.setToolEnabled('DrawBBox');

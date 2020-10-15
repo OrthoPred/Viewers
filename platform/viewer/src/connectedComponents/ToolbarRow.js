@@ -167,10 +167,19 @@ class ToolbarRow extends Component {
               onValueChanged={onPressLeft}
             />
           </div>
+
           {buttonComponents}
           <ConnectedLayoutButton />
           <h3> placeholder</h3>
           <h3 style={{ color: 'blue' }}> {this.props.text}</h3>
+          {/* <div className="inferenceProgressWrapper" id="inferenceProgress">
+            <div className="inferenceProgressBar">
+              <div
+                className="inferenceProgress"
+                style={{ width: this.props.text + '%' }}
+              />
+            </div>
+          </div> */}
           <div
             className="pull-right m-t-1 rm-x-1"
             style={{ marginLeft: 'auto' }}
@@ -328,12 +337,12 @@ function _handleBuiltIn(button) {
   const { id, options } = button;
 
   if (options.behavior === 'DOWNLOAD_SCREEN_SHOT') {
-    console.log('download gomb studies:', this.props.studies); //******************************************** */
+    // console.log('download gomb studies:', this.props.studies); //******************************************** */
     commandsManager.runCommand('showDownloadViewportModal', {
       title: t('Upload deidentified images to the server'), //Download High Quality Image'),
       studies: this.props.studies,
     });
-    console.log('download gomb vége');
+    // console.log('download gomb vége');
   }
 }
 

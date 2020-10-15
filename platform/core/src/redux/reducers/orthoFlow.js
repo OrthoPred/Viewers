@@ -5,14 +5,14 @@ const defaultState = {
 };
 
 const orthoFlow = (state = defaultState, action) => {
-  let results = { progress: '' };
+  let results = { progress: '75' };
   // let lastUpdated;
   // console.log('got data: ', action.progressId);
   // console.log(action.progressData);
 
   switch (action.type) {
     case 'SET_INFERENCE_PROGRESS':
-      results = action.results;
+      results['progress'] = action.results;
 
       return Object.assign({}, state, results);
     // return Object.assign({}, state, { 0: action.progressData });
